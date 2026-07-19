@@ -28,7 +28,7 @@ local LPH_NO_VIRTUALIZE = LPH_NO_VIRTUALIZE or function(f) return f end
 local function updateSliderLabelSafe(val) end
 
 -- 1. LOAD NEW UI LIBRARY FROM THE LATEST SOURCE
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/nazumirui5-oss/Ui-Library/refs/heads/main/Ui%20Library.lua"))()
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/gamerlatahzan-design/tester/refs/heads/main/UI%20Library.lua"))()
 
 -- 2. SETUP MAIN ROBLOX SERVICES
 local Players = game:GetService("Players")
