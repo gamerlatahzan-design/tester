@@ -1,6 +1,6 @@
 -- ========================================================================
 -- [[ LOUIS HUB - TIME BOMB DUELS FUNCTIONAL PREMIUM EDITION (OPTIMIZED) ]]
--- [[ FULL MIGRATED TO NEW UI LIBRARY STANDARD - OPERATIONAL ]]
+-- [[ COMPATIBLE WITH NEW UI LIBRARY STANDARD - VERSI PERBAIKAN PENUH ]]
 -- ========================================================================
 
 -- UPVALUE CACHING FOR MAXIMUM PERFORMANCE UNDER OBFUSCATION
@@ -28,7 +28,7 @@ local LPH_NO_VIRTUALIZE = LPH_NO_VIRTUALIZE or function(f) return f end
 local function updateSliderLabelSafe(val) end
 
 -- 1. LOAD NEW UI LIBRARY FROM THE LATEST SOURCE
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/gamerlatahzan-design/tester/refs/heads/main/UI%20Library.txt"))()
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/nazumirui5-oss/Ui-Library/refs/heads/main/Ui%20Library.lua"))()
 
 -- 2. SETUP MAIN ROBLOX SERVICES
 local Players = game:GetService("Players")
@@ -319,168 +319,7 @@ local isSticking = false
 local previewContainers = {} 
 
 -- ========================================================
--- [[ CUSTOM GLOBAL KEYBIND CONFIGURATION SYSTEM ]]
--- ========================================================
-local Keybinds = {}
-
-local function GetKeyCode(str)
-    local success, result = pcall(function()
-        return Enum.KeyCode[str]
-    end)
-    if success and result then
-        return result
-    end
-    return Enum.KeyCode.None
-end
-
-Keybinds.UIToggle = GetKeyCode(Config.Keybind_UIToggle)
-Keybinds.FollowToggle = GetKeyCode(Config.Keybind_FollowToggle)
-Keybinds.AutoWalkToggle = GetKeyCode(Config.Keybind_AutoWalkToggle)
-Keybinds.AutoPassToggle = GetKeyCode(Config.Keybind_AutoPassToggle)
-Keybinds.RangeChaseToggle = GetKeyCode(Config.Keybind_RangeChaseToggle)
-Keybinds.FlickToggle = GetKeyCode(Config.Keybind_FlickToggle)
-Keybinds.AutoHoldToggle = GetKeyCode(Config.Keybind_AutoHoldToggle)
-Keybinds.TripToggle = GetKeyCode(Config.Keybind_TripToggle)
-Keybinds.FreezeToggle = GetKeyCode(Config.Keybind_FreezeToggle)
-Keybinds.InfJumpToggle = GetKeyCode(Config.Keybind_InfJumpToggle)
-Keybinds.WallhopToggle = GetKeyCode(Config.Keybind_WallhopToggle)
-Keybinds.HitboxToggle = GetKeyCode(Config.Keybind_HitboxToggle)
-Keybinds.CrosshairToggle = GetKeyCode(Config.Keybind_CrosshairToggle)
-Keybinds.CamlockToggle = GetKeyCode(Config.Keybind_CamlockToggle)
-Keybinds.TPWalkToggle = GetKeyCode(Config.Keybind_TPWalkToggle)
-Keybinds.DesyncImmunityToggle = GetKeyCode(Config.Keybind_DesyncImmunityToggle)
-
-for _, pathInfo in ipairs(FlingPaths) do
-    local savedVal = Config["Keybind_" .. pathInfo.id] or "None"
-    Keybinds[pathInfo.id] = GetKeyCode(savedVal)
-end
-
--- ========================================================
--- [[ DYNAMIC CUSTOM CROSSHAIR STATE & PRESETS ]]
--- ========================================================
-_G.CrosshairSettings = {
-    Enabled = false,
-    Style = "Cross",
-    Size = 10,
-    Gap = 5,
-    Thickness = 1.5,
-    Color = Color3.fromRGB(0, 255, 150),
-    Rainbow = false,
-    ImageId = "6877713475",
-    Rotation = 0,
-    AutoSpin = false,
-    SpinSpeed = 50,
-    OnlyShiftLock = false,
-    HideDefaultCursor = true
-}
-_G.CrosshairLoaded = false
-
-local PresetNames = {
-    "Preset 1 (ID: 6877713475)", "Preset 2 (ID: 11767039030)", "Preset 3 (ID: 11763581182)",
-    "Preset 4 (ID: 11816181606)", "Preset 5 (ID: 11816262829)", "Preset 6 (ID: 11894211724)",
-    "Preset 7 (ID: 11903012166)", "Preset 8 (ID: 12308297405)", "Preset 9 (ID: 13515759440)",
-    "Preset 10 (ID: 13561401101)", "Preset 11 (ID: 13413721933)", "Preset 12 (ID: 12952422567)",
-    "Preset 13 (ID: 12789524132)", "Preset 14 (ID: 12681078223)", "Preset 15 (ID: 12403457353)",
-    "Preset 16 (ID: 17665878559)", "Preset 17 (ID: 11863480747)", "Preset 18 (ID: 11958213641)",
-    "Preset 19 (ID: 17117394116)", "Preset 20 (ID: 10879103438)", "Preset 21 (ID: 12099552082)",
-    "Preset 22 (ID: 12645685438)", "Preset 23 (ID: 13187494895)", "Preset 24 (ID: 14165283181)",
-    "Preset 25 (ID: 14196151488)", "Preset 26 (ID: 14175340156)", "Preset 27 (ID: 15064835974)",
-    "Preset 28 (ID: 11717828334)", "Preset 29 (ID: 11770890261)", "Preset 30 (ID: 12436450999)",
-    "Preset 31 (ID: 14828905230)", "Preset 32 (ID: 5112357171)", "Preset 33 (ID: 8351520948)",
-    "Preset 34 (ID: 12294092863)", "Preset 35 (ID: 11746881057)", "Preset 36 (ID: 11756692092)",
-    "Preset 37 (ID: 11763243469)", "Preset 38 (ID: 12077205402)", "Preset 39 (ID: 12146988029)",
-    "Preset 40 (ID: 2366671460)", "Preset 41 (ID: 11915618919)", "Preset 42 (ID: 10164277641)",
-    "Preset 43 (ID: 4818758746)", "Preset 44 (ID: 11720549778)", "Preset 45 (ID: 15963047794)",
-    "Preset 46 (ID: 13413667445)", "Preset 47 (ID: 12323570810)", "Preset 48 (6877713475)",
-    "Preset 49 (9126971642)", "Preset 50 (6848903054)"
-}
-
-local CrosshairColorPresets = {
-    ["Green (Neon)"] = Color3.fromRGB(0, 255, 150),
-    ["Red"] = Color3.fromRGB(255, 75, 75),
-    ["Blue"] = Color3.fromRGB(0, 150, 255),
-    ["White"] = Color3.fromRGB(255, 255, 255),
-    ["Yellow"] = Color3.fromRGB(255, 220, 0),
-    ["Cyan"] = Color3.fromRGB(0, 255, 255),
-    ["Pink"] = Color3.fromRGB(255, 100, 200)
-}
-
-local function GetCleanImageId(id)
-    local str = tostring(id)
-    local found = str:match("ID:%s*(%d+)")
-    if found then
-        return found
-    end
-    return str:gsub("%D", "")
-end
-
-local triggerManualPass
-local applyFreeze
-local stopFreeze
-local startFreeze
-local isFreezing = false
-local updatePlayersHitboxes
-local cleanHitboxes
-local updateWallhopButtonsSync
-local ToggleFeature = nil
-
--- ========================================================
--- [[ REGISTER & SCALE EXTERNAL UTILITY BUTTONS ENGINE ]]
--- ========================================================
-local ExternalButtonsList = {}
-
-local function RegisterExternalButton(btnWrapper)
-    table.insert(ExternalButtonsList, btnWrapper)
-end
-
-local function SetButtonSize(btnWrapper, scaleValue)
-    pcall(function()
-        if type(btnWrapper) == "table" then
-            if btnWrapper.SetSize then
-                btnWrapper:SetSize(44 * scaleValue)
-            elseif typeof(btnWrapper.Instance) == "Instance" then
-                btnWrapper.Instance.Size = UDim2.new(0, 44 * scaleValue, 0, 44 * scaleValue)
-            end
-        elseif typeof(btnWrapper) == "Instance" and btnWrapper:IsA("GuiObject") then
-            btnWrapper.Size = UDim2.new(0, 44 * scaleValue, 0, 44 * scaleValue)
-        end
-    end)
-end
-
-local function SetButtonDragLock(btnWrapper, locked)
-    pcall(function()
-        if type(btnWrapper) == "table" and btnWrapper.SetDragLock then
-            btnWrapper:SetDragLock(locked)
-        end
-    end)
-end
-
-local function UpdateAllButtonsDragLock(locked)
-    for _, btn in ipairs(ExternalButtonsList) do
-        SetButtonDragLock(btn, locked)
-    end
-end
-
-local function UpdateAllButtonsSize(scaleValue)
-    for _, btn in ipairs(ExternalButtonsList) do
-        SetButtonSize(btn, scaleValue)
-    end
-end
-
-local function SafeSetVisible(btn, visible)
-    if btn and type(btn) == "table" and btn.SetVisible then
-        pcall(function() btn:SetVisible(visible) end)
-    end
-end
-
-local function SafeSetText(btn, text)
-    if btn and type(btn) == "table" and btn.SetText then
-        pcall(function() btn:SetText(text) end)
-    end
-end
-
--- ========================================================
--- [[ RE-EXECUTION CLEANUP SYSTEM ]]
+-- [[ GLOBAL CONNECTION TRACKER & CLEANUP SYSTEM ]]
 -- ========================================================
 if _G.LouisConnections then
     for _, conn in pairs(_G.LouisConnections) do
@@ -986,17 +825,7 @@ updatePlayersHitboxes = function()
     end
 end
 
-local HitboxRenderConnection = RunService.PreSimulation:Connect(function()
-    if _G.LocalHitboxEnabled then
-        pcall(updatePlayersHitboxes)
-    end
-end)
-table.insert(_G.LouisConnections, HitboxRenderConnection)
-
--- ========================================================
--- [[ LIGHTWEIGHT PLAYERS ESP ENGINE ]]
--- ========================================================
-local highlights = {}
+local lastESPUpdate = 0
 local function updateESP()
     if not _G.ESPEnabled then
         for player, highlight in pairs(highlights) do
@@ -1014,7 +843,6 @@ local function updateESP()
                 if not highlight then
                     highlight = Instance.new("Highlight")
                     highlight.Name = "LouisESP"
-                    highlight.FillColor = Color3.fromRGB(255, 0, 0)
                     highlight.OutlineColor = Color3.fromRGB(255, 255, 255)
                     highlight.FillTransparency = 0.5
                     highlight.OutlineTransparency = 0
@@ -1024,7 +852,7 @@ local function updateESP()
                 if hasBomb(player) then
                     highlight.FillColor = Color3.fromRGB(255, 0, 0) 
                 elseif isTeammate(player) then
-                    highlight.FillColor = Color3.fromRGB(0, 255,  green) 
+                    highlight.FillColor = Color3.fromRGB(0, 255, 0) -- PERBAIKAN BUG: Mengganti variabel green yang nil menjadi nilai hijau solid (0)
                 else
                     highlight.FillColor = Color3.fromRGB(0, 150, 255) 
                 end
@@ -1044,16 +872,6 @@ local ESPConnection = RunService.Heartbeat:Connect(function()
     pcall(updateESP)
 end)
 table.insert(_G.LouisConnections, ESPConnection)
-
--- ========================================================
--- [[ GHOST & PHYSICS DESYNC HELPERS ]]
--- ========================================================
-local function getPing()
-    local success, result = pcall(function()
-        return Stats.Network.ServerStatsItem["Data Ping"]:GetValue()
-    end)
-    if success then return result else return 100 end
-end
 
 local function updateDesyncGhost(cframe)
     if not _G.DesyncVisualEnabled then
@@ -1181,181 +999,6 @@ triggerManualPass = function()
     end
 end
 
--- ========================================================
--- [[ STAGE 3 MIGRATION: ADAPTER UNTUK TOMBOL EKSTERNAL ]]
--- ========================================================
--- Adapter ini bertugas menerjemahkan panggil kustom proksional tombol V1 ke format UI Library Terbaru.
-
-local function CreateExternalButtonAdapter(flag, text, callback, buttonType)
-    local shape = Library.Settings.ExternalShape or "Round"
-    local typeVal = buttonType or "Click"
-    
-    -- Membuat tombol eksternal dinamis memanfaatkan pustaka Terbaru [1]
-    local extFrame = Library:CreateExternalButton(text, typeVal, shape, flag, callback)
-    
-    local controller = {}
-    controller.Instance = extFrame
-    
-    function controller:SetVisible(state)
-        if extFrame then
-            extFrame.Visible = state
-        end
-    end
-    
-    function controller:SetText(val)
-        if extFrame then
-            local btn = extFrame:FindFirstChildOfClass("TextButton")
-            if btn then
-                btn.Text = tostring(val)
-            end
-        end
-    end
-    
-    function controller:SetDragLock(locked)
-        -- Logika seret kini otomatis ditangani module hybrid dragging terbaru
-    end
-    
-    function controller:SetSize(scaleValue)
-        if extFrame then
-            -- Auto-scaling visual
-            extFrame.Size = UDim2.new(0, 0, 0, 30)
-        end
-    end
-    
-    return controller
-end
-
--- ========================================================
--- [[ RE-INITIALIZATION TOMBOL MELAYANG EKSTERNAL ]]
--- ========================================================
-
-_G.ExtFollowBtn = CreateExternalButtonAdapter("ExtFollow", "AUTO FOLLOW", function()
-    if not _G.FollowEnabled then return end
-    _G.FollowActive = not _G.FollowActive
-    if _G.FollowActive then
-        SafeSetText(_G.ExtFollowBtn, "FOLLOWING")
-    else
-        SafeSetText(_G.ExtFollowBtn, "AUTO FOLLOW")
-    end
-end, "Toggle")
-RegisterExternalButton(_G.ExtFollowBtn)
-
-_G.ExtFreezeBtn = CreateExternalButtonAdapter("ExtFreeze", "FREEZE", function()
-    if isFreezing then
-        stopFreeze()
-    else
-        startFreeze()
-    end
-end, "Toggle")
-RegisterExternalButton(_G.ExtFreezeBtn)
-
-_G.ExtFlickBtn = CreateExternalButtonAdapter("ExtFlick", "FLICK", function()
-    _G.FlickActive = not _G.FlickActive
-    if _G.FlickActive then
-        SafeSetText(_G.ExtFlickBtn, "FLICKING")
-    else
-        SafeSetText(_G.ExtFlickBtn, "FLICK")
-    end
-end, "Toggle")
-RegisterExternalButton(_G.ExtFlickBtn)
-
-_G.ExtHoldBtn = CreateExternalButtonAdapter("ExtHold", "HOLD BOMB", function()
-    _G.AutoHoldActive = not _G.AutoHoldActive
-    if _G.AutoHoldActive then
-        SafeSetText(_G.ExtHoldBtn, "HOLDING")
-    else
-        SafeSetText(_G.ExtHoldBtn, "HOLD BOMB")
-    end
-end, "Toggle")
-RegisterExternalButton(_G.ExtHoldBtn)
-
-_G.ExtPassBtn = CreateExternalButtonAdapter("ExtPass", "PASS BOMB", function()
-    triggerManualPass()
-end, "Click")
-RegisterExternalButton(_G.ExtPassBtn)
-
-_G.ExtAutoWalkBtn = CreateExternalButtonAdapter("ExtAutoWalk", "AUTO WALK", function()
-    _G.AutoWalkActive = not _G.AutoWalkActive
-    if _G.AutoWalkActive then
-        SafeSetText(_G.ExtAutoWalkBtn, "WALKING")
-    else
-        SafeSetText(_G.ExtAutoWalkBtn, "AUTO WALK")
-    end
-end, "Toggle")
-RegisterExternalButton(_G.ExtAutoWalkBtn)
-
-_G.ExtRangeChaseBtn = CreateExternalButtonAdapter("ExtRangeChase", "RANGE CHASE", function()
-    _G.RangeChaseEnabled = not _G.RangeChaseEnabled
-    if _G.RangeChaseEnabled then
-        SafeSetText(_G.ExtRangeChaseBtn, "CHASING")
-    else
-        SafeSetText(_G.ExtRangeChaseBtn, "RANGE CHASE")
-    end
-end, "Toggle")
-RegisterExternalButton(_G.ExtRangeChaseBtn)
-
-_G.ExtTripBtn = CreateExternalButtonAdapter("ExtTripFall", "TRIP FALL", function()
-    _G.TripEnabled = not _G.TripEnabled
-    ApplyTrip(_G.TripEnabled)
-    if _G.TripEnabled then
-        SafeSetText(_G.ExtTripBtn, "TRIPPED")
-    else
-        SafeSetText(_G.ExtTripBtn, "TRIP FALL")
-    end
-end, "Toggle")
-RegisterExternalButton(_G.ExtTripBtn)
-
-_G.ExtCamlockBtn = CreateExternalButtonAdapter("ExtCamlock", "CAMLOCK", function()
-    if not _G.CamlockEnabled then return end
-    _G.CamlockActive = not _G.CamlockActive
-    if _G.CamlockActive then
-        SafeSetText(_G.ExtCamlockBtn, "CAMLOCK [ON]")
-    else
-        SafeSetText(_G.ExtCamlockBtn, "CAMLOCK")
-    end
-end, "Toggle")
-RegisterExternalButton(_G.ExtCamlockBtn)
-
-_G.ExtDesyncImmunityBtn = CreateExternalButtonAdapter("ExtDesyncShield", "DESYNC SHIELD", function()
-    if not _G.DesyncImmunityEnabled then return end
-    _G.DesyncImmunityActive = not _G.DesyncImmunityActive
-    setCharacterCanTouch(not _G.DesyncImmunityActive)
-    if _G.DesyncImmunityActive then
-        SafeSetText(_G.ExtDesyncImmunityBtn, "SHIELD [ON]")
-    else
-        SafeSetText(_G.ExtDesyncImmunityBtn, "DESYNC SHIELD")
-    end
-end, "Toggle")
-RegisterExternalButton(_G.ExtDesyncImmunityBtn)
-
-_G.ExtWHNormalBtn = CreateExternalButtonAdapter("ExtWHNormal", "wh_normal", function()
-    ToggleFeature("Wallhop")
-end, "Toggle")
-RegisterExternalButton(_G.ExtWHNormalBtn)
-
-_G.ExtWHInstantBtn = CreateExternalButtonAdapter("ExtWHInstant", "wh_instant", function()
-    ToggleFeature("Wallhop")
-end, "Toggle")
-RegisterExternalButton(_G.ExtWHInstantBtn)
-
-_G.ExtWHUltraBtn = CreateExternalButtonAdapter("ExtWHUltra", "wh_ultra", function()
-    ToggleFeature("Wallhop")
-end, "Toggle")
-RegisterExternalButton(_G.ExtWHUltraBtn)
-
--- ========================================================
--- [[ DYNAMIC CUSTOM JALUR FLING BUTTON GENERATION ]]
--- ========================================================
-for _, pathInfo in ipairs(FlingPaths) do
-    local currentInfo = pathInfo
-    local btn = CreateExternalButtonAdapter("ExtPath_" .. currentInfo.id, currentInfo.display:upper(), function()
-        triggerPath(currentInfo)
-    end, "Click")
-    
-    RegisterExternalButton(btn)
-    PathButtons[currentInfo.id] = btn
-end
-
 applyFreeze = function(state)
     local char = LocalPlayer.Character
     if not char then return end
@@ -1386,30 +1029,6 @@ startFreeze = function()
     SafeSetText(_G.ExtFreezeBtn, "FROZEN")
 end
 
--- ========================================================
--- [[ PASSIVE CUSTOM CROSSHAIR MOUSE BYPASS ENGINE ]]
--- ========================================================
-local TRANSPARENT_ICON = "rbxassetid://0"
-
-SafeConnect(RunService.PostSimulation, function()
-    if _G.CrosshairSettings.Enabled and _G.CrosshairSettings.HideDefaultCursor then
-        if Mouse.Icon ~= TRANSPARENT_ICON then
-            pcall(function()
-                Mouse.Icon = TRANSPARENT_ICON
-            end)
-        end
-    else
-        if Mouse.Icon == TRANSPARENT_ICON then
-            pcall(function()
-                Mouse.Icon = ""
-            end)
-        end
-    end
-end)
-
--- ========================================================
--- [[ MOVEMENT & TBD AUTOMATIONS PHYSICS ENGINE ]]
--- ========================================================
 local function performWallhop(visualStyle)
     if not canWallJump or (tick() - lastWallHopTime < 0.18) then return end
     
@@ -1530,8 +1149,822 @@ updateWallhopButtonsSync = function()
     end
 end
 
+-- PERBAIKAN BUG: Menulis kembali fungsi penata tombol fling kustom yang sebelumnya hilang [1]
+local function setupPathButtons()
+    for _, pathInfo in ipairs(FlingPaths) do
+        local extBtn = PathButtons[pathInfo.id]
+        if extBtn then
+            if _G.CustomPathsEnabled then
+                local isVisible = ExternalButtonStates[pathInfo.id] or false
+                SafeSetVisible(extBtn, isVisible)
+            else
+                SafeSetVisible(extBtn, false)
+            end
+        end
+    end
+end
+
+-- ========================================================================
+-- [[ 1. MAIN MENU INITIALIZATION (MUST RUN BEFORE EXTERNAL BUTTONS) ]]
+-- ========================================================================
+-- PERBAIKAN BUG: Jendela UI utama diinisialisasi terlebih dahulu agar elemen turunan dapat muncul secara otomatis
+
+local Window = Library:CreateWindow("LOUIS TBD PREMIUM EDITION", "discord.gg/P2FEVBz2PG", {
+    Mode = "PC",
+    Scale = 1.0,
+    Font = Enum.Font.GothamMedium,
+    BoldFont = Enum.Font.GothamBold
+})
+
+Window:CreateCategory("Main Hub")
+local TabMain = Window:CreateTab("Welcome", "home", false)
+local TabCombat = Window:CreateTab("Combat", "swords", false)
+local TabVisuals = Window:CreateTab("Visuals", "eye", false)
+local TabCrosshair = Window:CreateTab("Custom Crosshairs", "crosshair", false)
+
+Window:CreateCategory("Premium Features")
+local TabPremium = Window:CreateTab("Premium", "crown", true) 
+
+Window:CreateCategory("Configurations")
+local TabKeybinds = Window:CreateTab("Keybind Settings", "keyboard", false)
+local TabControls = Window:CreateTab("Controls & Scales", "sliders", false)
+
 -- ========================================================
--- [[ PRIMARY CORE GAMEPLAY LOOP (DT ALIGNED) ]]
+-- [[ 2. SECTIONS & INPUT CONTROL ELEMENTS ]]
+-- ========================================================
+
+-- --- TAB 1: WELCOME ---
+local SecWelcome = TabMain:CreateSection("Welcome Details")
+SecWelcome:CreateParagraph("Welcome!", "Hello " .. LocalPlayer.Name .. "!\nThank you for executing Louis TBD Premium Edition.")
+SecWelcome:CreateParagraph("UI Instructions", "Keybind to open/hide menu: Insert Key\nYou can toggle external buttons from settings.")
+SecWelcome:CreateParagraph("Official Community", "Join our Discord server to get the latest update information!")
+
+SecWelcome:CreateButton("Copy Discord Server Link", function()
+    if setclipboard then
+        setclipboard("https://discord.gg/P2FEVBz2PG")
+        Library:CreateNotification("Discord Link", "Discord link copied successfully to your clipboard!", 2)
+    else
+        Library:CreateNotification("Error", "Your exploit does not support clipboard copying.", 2.5)
+    end
+end)
+
+SecWelcome:CreateButton("Activate Potato Graphics Optimization", function()
+    ApplyPotato()
+    Library:CreateNotification("Potato Mode", "Graphics optimized successfully!", 3)
+end)
+
+-- --- TAB 2: COMBAT ---
+local SecCombatChasing = TabCombat:CreateSection("Auto Chase & Walk Controls")
+
+local FollowToggle = SecCombatChasing:CreateToggle("Enable Follow System", Config.FollowEnabled, "FollowEnabled", {}, function(state)
+    _G.FollowEnabled = state
+    _G.FollowActive = state 
+    Config.FollowEnabled = state
+    SaveConfig()
+    SafeSetVisible(_G.ExtFollowBtn, state)
+    if state then
+        SafeSetText(_G.ExtFollowBtn, "FOLLOWING")
+    else
+        SafeSetText(_G.ExtFollowBtn, "AUTO FOLLOW")
+    end
+end)
+
+SecCombatChasing:CreateToggle("Predict Coordinates", Config.PredictEnabled, "PredictEnabled", {}, function(state)
+    _G.PredictEnabled = state
+    Config.PredictEnabled = state
+    SaveConfig()
+end)
+
+SecCombatChasing:CreateToggle("Enable Auto Walk System", Config.AutoWalkEnabled, "AutoWalkEnabled", {}, function(state)
+    _G.AutoWalkEnabled = state
+    _G.AutoWalkActive = state 
+    Config.AutoWalkEnabled = state
+    SaveConfig()
+    SafeSetVisible(_G.ExtAutoWalkBtn, state)
+    if state then
+        SafeSetText(_G.ExtAutoWalkBtn, "WALKING")
+    else
+        SafeSetText(_G.ExtAutoWalkBtn, "AUTO WALK")
+    end
+end)
+
+SecCombatChasing:CreateSlider("Auto Walk Retreat Speed", 10, 50, Config.AutoWalkRetreatSpeed, "AutoWalkRetreatSpeed", function(val)
+    _G.AutoWalkRetreatSpeed = val
+    Config.AutoWalkRetreatSpeed = val
+    SaveConfig()
+end)
+
+SecCombatChasing:CreateDropdown("Follow & Walk Mode", {"Follow + Retreat", "Follow Only"}, Config.FollowTypeMode, "FollowTypeMode", function(val)
+    _G.FollowTypeMode = val
+    Config.FollowTypeMode = val
+    SaveConfig()
+end)
+
+local SecCombatHijack = TabCombat:CreateSection("Target Hijack Controls")
+SecCombatHijack:CreateToggle("Enable Target Hijacking", Config.HijackEnabled, "HijackEnabled", {}, function(state)
+    _G.HijackEnabled = state
+    Config.HijackEnabled = state
+    SaveConfig()
+end)
+
+SecCombatHijack:CreateSlider("Hijack Override Distance (Studs)", 1, 100, Config.HijackDistance, "HijackDistance", function(val)
+    _G.HijackDistance = val
+    Config.HijackDistance = val
+    SaveConfig()
+end)
+
+local SecCombatPass = TabCombat:CreateSection("Automatic Bomb Passing")
+SecCombatPass:CreateToggle("Enable Auto Pass Bomb", Config.AutoPassEnabled, "AutoPassEnabled", {}, function(state)
+    _G.AutoPassEnabled = state
+    Config.AutoPassEnabled = state
+    SaveConfig()
+end)
+
+SecCombatPass:CreateDropdown("Pass Target Mode", {"Without Bomb", "With Bomb"}, Config.PassTargetMode, "PassTargetMode", function(val)
+    _G.PassTargetMode = val
+    Config.PassTargetMode = val
+    SaveConfig()
+end)
+
+SecCombatPass:CreateSlider("Pass Max Distance (Studs)", 1, 200, Config.PassMaxDistance, "PassMaxDistance", function(val)
+    _G.PassMaxDistance = val
+    Config.PassMaxDistance = val
+    SaveConfig()
+end)
+
+SecCombatPass:CreateToggle("Show Manual Pass Button [PASS]", Config.PassExternalVisible, "PassExternalVisible", {}, function(state)
+    _G.PassExternalVisible = state
+    Config.PassExternalVisible = state
+    SaveConfig()
+    SafeSetVisible(_G.ExtPassBtn, state)
+end)
+
+SecCombatPass:CreateButton("Manual Trigger Pass Bomb Now", function()
+    triggerManualPass()
+end)
+
+local SecCombatRangeChase = TabCombat:CreateSection("Range Area Chase System")
+SecCombatRangeChase:CreateToggle("Enable Range Area Chase", Config.RangeChaseEnabled, "RangeChaseEnabled", {}, function(state)
+    _G.RangeChaseEnabled = state
+    Config.RangeChaseEnabled = state
+    SaveConfig()
+    SafeSetVisible(_G.ExtRangeChaseBtn, state)
+    if state then
+        SafeSetText(_G.ExtRangeChaseBtn, "CHASING")
+    else
+        SafeSetText(_G.ExtRangeChaseBtn, "RANGE CHASE")
+    end
+end)
+
+SecCombatRangeChase:CreateSlider("Chase Range (Studs)", 10, 150, Config.RangeChaseValue, "RangeChaseValue", function(val)
+    _G.RangeChaseValue = val
+    Config.RangeChaseValue = val
+    SaveConfig()
+end)
+
+local SecCombatFlick = TabCombat:CreateSection("Flick & Hold Controls")
+SecCombatFlick:CreateToggle("Enable Flick System", Config.FlickEnabled, "FlickEnabled", {}, function(state)
+    _G.FlickEnabled = state
+    _G.FlickActive = state 
+    Config.FlickEnabled = state
+    SaveConfig()
+    SafeSetVisible(_G.ExtFlickBtn, state)
+    if state then
+        SafeSetText(_G.ExtFlickBtn, "FLICKING")
+    else
+        SafeSetText(_G.ExtFlickBtn, "FLICK")
+    end
+end)
+
+SecCombatFlick:CreateDropdown("Flick Target Mode", {"Camera Only", "Character Only", "Both"}, Config.FlickTargetMode, "FlickTargetMode", function(val)
+    _G.FlickTargetMode = val
+    Config.FlickTargetMode = val
+    SaveConfig()
+end)
+
+SecCombatFlick:CreateSlider("Character Flick Strength (Degrees)", 5, 180, Config.CharFlickStrength, "CharFlickStrength", function(val)
+    _G.CharFlickStrength = val
+    Config.CharFlickStrength = val
+    SaveConfig()
+end)
+
+SecCombatFlick:CreateSlider("Camera Flick Strength (Degrees)", 5, 90, Config.FlickStrength, "FlickStrength", function(val)
+    _G.FlickStrength = val
+    Config.FlickStrength = val
+    SaveConfig()
+end)
+
+SecCombatFlick:CreateToggle("Enable Auto Hold Bomb", Config.AutoHoldEnabled, "AutoHoldEnabled", {}, function(state)
+    _G.AutoHoldEnabled = state
+    _G.AutoHoldActive = state 
+    Config.AutoHoldEnabled = state
+    SaveConfig()
+    SafeSetVisible(_G.ExtHoldBtn, state)
+    if state then
+        SafeSetText(_G.ExtHoldBtn, "HOLDING")
+    else
+        SafeSetText(_G.ExtHoldBtn, "HOLD BOMB")
+    end
+end)
+
+local SecCombatTPW = TabCombat:CreateSection("Teleport Walk (TPWalk)")
+SecCombatTPW:CreateToggle("Enable TPWalk Speed", Config.TPWalkEnabled, "TPWalkEnabled", {}, function(state)
+    _G.TPWalkEnabled = state
+    Config.TPWalkEnabled = state
+    SaveConfig()
+end)
+
+SecCombatTPW:CreateSlider("TPWalk Speed Scale", 1, 100, Config.TPWalkSpeed, "TPWalkSpeed", function(val)
+    _G.TPWalkSpeed = val
+    Config.TPWalkSpeed = val
+    SaveConfig()
+end)
+
+local SecCombatDesync = TabCombat:CreateSection("Replication Desync Utilities")
+SecCombatDesync:CreateToggle("Aetherial Desync Shield", Config.DesyncImmunityEnabled, "DesyncImmunityEnabled", {}, function(state)
+    _G.DesyncImmunityEnabled = state
+    _G.DesyncImmunityActive = state
+    Config.DesyncImmunityEnabled = state
+    Config.DesyncImmunityActive = state
+    SaveConfig()
+    SafeSetVisible(_G.ExtDesyncImmunityBtn, state)
+    setCharacterCanTouch(not state)
+    if state then
+        SafeSetText(_G.ExtDesyncImmunityBtn, "SHIELD [ON]")
+    else
+        SafeSetText(_G.ExtDesyncImmunityBtn, "DESYNC SHIELD")
+    end
+end)
+
+local SecCombatHitbox = TabCombat:CreateSection("Range Hitbox Expander (Local Area Bounds)")
+SecCombatHitbox:CreateToggle("Enable Opponents Hitbox Expander", Config.LocalHitboxEnabled, "LocalHitboxEnabled", {}, function(state)
+    _G.LocalHitboxEnabled = state
+    Config.LocalHitboxEnabled = state
+    SaveConfig()
+    pcall(updatePlayersHitboxes)
+end)
+
+SecCombatHitbox:CreateToggle("Show Hitbox Outlines (Visual)", Config.HitboxVisualEnabled, "HitboxVisualEnabled", {}, function(state)
+    _G.HitboxVisualEnabled = state
+    Config.HitboxVisualEnabled = state
+    SaveConfig()
+    pcall(updatePlayersHitboxes)
+end)
+
+SecCombatHitbox:CreateDropdown("Hitbox Range Shape", {"Cylinder", "Sphere", "Block", "Wedge"}, Config.HitboxShape, "HitboxShape", function(val)
+    _G.HitboxShape = val
+    Config.HitboxShape = val
+    SaveConfig()
+    pcall(updatePlayersHitboxes)
+end)
+
+SecCombatHitbox:CreateSlider("Hitbox Range Size (Studs)", 1, 20, Config.LocalHitboxSize, "LocalHitboxSize", function(val)
+    _G.LocalHitboxSize = val
+    Config.LocalHitboxSize = val
+    SaveConfig()
+    pcall(updatePlayersHitboxes)
+end)
+
+SecCombatHitbox:CreateSlider("Teleport Hold Duration (ms)", 1, 100, Config.HitboxTeleportDelay, "HitboxTeleportDelay", function(val)
+    _G.HitboxTeleportDelay = val / 1000
+    Config.HitboxTeleportDelay = val
+    SaveConfig()
+    task_defer(function()
+        updateSliderLabelSafe(val)
+    end)
+end)
+
+local SecCombatTrip = TabCombat:CreateSection("Trip Fall Physics")
+SecCombatTrip:CreateToggle("Enable Trip Fall", Config.TripEnabled, "TripEnabled", {}, function(state)
+    _G.TripEnabled = state
+    Config.TripEnabled = state
+    SaveConfig()
+    ApplyTrip(_G.TripEnabled)
+    SafeSetVisible(_G.ExtTripBtn, state)
+    if state then
+        SafeSetText(_G.ExtTripBtn, "TRIPPED")
+    else
+        SafeSetText(_G.ExtTripBtn, "TRIP FALL")
+    end
+end)
+
+local SecCombatFreeze = TabCombat:CreateSection("Freeze System")
+SecCombatFreeze:CreateToggle("Enable Freeze System", Config.FreezeEnabled, "FreezeEnabled", {}, function(state)
+    _G.FreezeEnabled = state
+    Config.FreezeEnabled = state
+    SaveConfig()
+    SafeSetVisible(_G.ExtFreezeBtn, state)
+    if not state then
+        pcall(function()
+            if isFreezing then
+                stopFreeze()
+            end
+        end)
+    end
+end)
+
+local SecCombatJump = TabCombat:CreateSection("Infinite Jump")
+SecCombatJump:CreateToggle("Infinite Jump Toggle", Config.InfJumpEnabled, "InfJumpEnabled", {}, function(state)
+    _G.InfJumpEnabled = state
+    Config.InfJumpEnabled = state
+    SaveConfig()
+end)
+
+SecCombatJump:CreateSlider("Maximum Jump Air-Count", 2, 10, Config.MaxJumpCount, "MaxJumpCount", function(val)
+    _G.MaxJumpCount = val
+    Config.MaxJumpCount = val
+    SaveConfig()
+end)
+
+-- --- TAB 3: VISUALS ---
+local SecVisualsESP = TabVisuals:CreateSection("Player ESP Highlights")
+SecVisualsESP:CreateToggle("Enable Player ESP", Config.ESPEnabled, "ESPEnabled", {}, function(state)
+    _G.ESPEnabled = state
+    Config.ESPEnabled = state
+    SaveConfig()
+end)
+
+local SecVisualsNet = TabVisuals:CreateSection("Network Latency Visualizer")
+SecVisualsNet:CreateToggle("Desync Ghost Visualizer", Config.DesyncVisualEnabled, "DesyncVisualEnabled", {}, function(state)
+    _G.DesyncVisualEnabled = state
+    Config.DesyncVisualEnabled = state
+    SaveConfig()
+    if not state then
+        if GhostModel then GhostModel:Destroy(); GhostModel = nil end
+    end
+end)
+
+local SecVisualsCos = TabVisuals:CreateSection("Record Protection & Cosmetics (Local)")
+SecVisualsCos:CreateButton("Randomize Avatar (Client)", function()
+    ApplyRandomAvatar()
+end)
+
+SecVisualsCos:CreateButton("Apply FE Korblox & Headless", function()
+    isHeadlessActive = true
+    isKorbloxActive = true
+    ApplyHeadless()
+    ApplyKorblox()
+    Library:CreateNotification("Visuals applied", "FE Headless & Korblox successfully loaded locally!", 2)
+end)
+
+local SecVisualsScale = TabVisuals:CreateSection("Camera & Resolution Scaling")
+SecVisualsScale:CreateToggle("FOV Override Toggle", Config.FOVEnabled, "FOVEnabled", {}, function(state)
+    _G.FOVEnabled = state
+    Config.FOVEnabled = state
+    SaveConfig()
+    if not state then
+        Camera.FieldOfView = 70
+    end
+end)
+
+SecVisualsScale:CreateSlider("Field Of View Value", 1, 200, Config.FOVValue, "FOVValue", function(val)
+    _G.FOVValue = val
+    Config.FOVValue = val
+    SaveConfig()
+end)
+
+SecVisualsScale:CreateToggle("Stretch Resolution Toggle", Config.ResolutionEnabled, "ResolutionEnabled", {}, function(state)
+    _G.ResolutionEnabled = state
+    Config.ResolutionEnabled = state
+    SaveConfig()
+end)
+
+SecVisualsScale:CreateSlider("Stretch Resolution Scale", 1, 20, Config.ResolutionValue, "ResolutionValue", function(val)
+    _G.ResolutionValue = val / 10
+    Config.ResolutionValue = val
+    SaveConfig()
+end)
+
+-- --- TAB 4: CUSTOM CROSSHAIRS ---
+local SecCrosshairMain = TabCrosshair:CreateSection("Crosshair Main")
+
+SecCrosshairMain:CreateToggle("Enable Custom Crosshair", false, "CustomCrosshairEnabled", {}, function(state)
+    _G.CrosshairSettings.Enabled = state
+    if state and not _G.CrosshairLoaded_2 then
+        _G.CrosshairLoaded_2 = true
+        task_spawn(function()
+            local url = "https://raw.githubusercontent.com/nazumirui5-oss/Ui-Library/refs/heads/main/crosshair.lua"
+            local success, err = pcall(function()
+                loadstring(game:HttpGet(url))()
+            end)
+            if not success then
+                _G.CrosshairLoaded_2 = false
+                Library:CreateNotification("Crosshair Error", "Failed to download crosshair module.", 3)
+            end
+        end)
+    end
+end)
+
+SecCrosshairMain:CreateToggle("Show Only When Shift Lock is On", false, "CrosshairOnlyShiftLock", {}, function(state)
+    _G.CrosshairSettings.OnlyShiftLock = state
+end)
+
+SecCrosshairMain:CreateToggle("Hide Roblox Default Cursor", true, "CrosshairHideDefaultCursor", {}, function(state)
+    _G.CrosshairSettings.HideDefaultCursor = state
+end)
+
+SecCrosshairMain:CreateDropdown("Crosshair Style", {"Cross", "T-Shape", "Diamond", "Circle", "Dot", "Image"}, "Cross", "CrosshairStyle", function(selected)
+    _G.CrosshairSettings.Style = selected
+end)
+
+SecCrosshairMain:CreateDropdown("Select Preset Image ID", PresetNames, PresetNames[1], "CrosshairPresetImage", function(selectedPreset)
+    local cleanId = selectedPreset:match("(%d+)%)") 
+    if cleanId then
+        _G.CrosshairSettings.ImageId = cleanId
+    end
+end)
+
+SecCrosshairMain:CreateTextBox("Custom Image ID", "Enter Image Asset ID manually...", "CrosshairCustomImage", function(text)
+    local cleanId = text:gsub("%D", "")
+    if cleanId ~= "" then
+        _G.CrosshairSettings.ImageId = cleanId
+        Library:CreateNotification("Crosshair ID", "ID updated manually to: " .. cleanId, 1.5)
+    end
+end)
+
+SecCrosshairMain:CreateDropdown("Crosshair Color Preset", {"Green (Neon)", "Red", "Blue", "White", "Yellow", "Cyan", "Pink"}, "Green (Neon)", "CrosshairColorPreset", function(selectedName)
+    local targetColor = CrosshairColorPresets[selectedName]
+    if targetColor then
+        _G.CrosshairSettings.Color = targetColor
+    end
+end)
+
+SecCrosshairMain:CreateToggle("Rainbow Crosshair Effect", false, "CrosshairRainbow", {}, function(state)
+    _G.CrosshairSettings.Rainbow = state
+end)
+
+SecCrosshairMain:CreateSlider("Crosshair Size / Radius", 2, 35, 10, "CrosshairSize", function(val)
+    _G.CrosshairSettings.Size = val
+end)
+
+SecCrosshairMain:CreateSlider("Crosshair Gap Size", 0, 25, 5, "CrosshairGap", function(val)
+    _G.CrosshairSettings.Gap = val
+end)
+
+SecCrosshairMain:CreateSlider("Crosshair Thickness", 1, 6, 2, "CrosshairThickness", function(val)
+    _G.CrosshairSettings.Thickness = val / 1.3
+end)
+
+local SecCrosshairRot = TabCrosshair:CreateSection("Crosshair Rotation Controls")
+SecCrosshairRot:CreateParagraph("Information", "Adjust manual rotation angle or enable Auto-Spin mode.")
+
+SecCrosshairRot:CreateSlider("Manual Rotation Angle", 0, 360, 0, "CrosshairRotation", function(val)
+    _G.CrosshairSettings.Rotation = val
+end)
+
+SecCrosshairRot:CreateToggle("Auto-Spin Crosshair", false, "CrosshairAutoSpin", {}, function(state)
+    _G.CrosshairSettings.AutoSpin = state
+end)
+
+SecCrosshairRot:CreateSlider("Auto-Spin Speed", 10, 200, 50, "CrosshairSpinSpeed", function(val)
+    _G.CrosshairSettings.SpinSpeed = val
+end)
+
+-- --- TAB 5: PREMIUM (LOCKED) ---
+local SecPremPaths = TabPremium:CreateSection("Custom Fling Coordinates")
+SecPremPaths:CreateParagraph("Information", "Configure custom coordinate flings. Clicking a button below toggles its external button.")
+
+SecPremPaths:CreateToggle("Enable Custom Paths", false, "CustomPathsEnabled", {}, function(state)
+    _G.CustomPathsEnabled = state
+    setupPathButtons()
+    Library:CreateNotification("Custom Paths", "Custom paths feature: " .. (state and "ENABLED" or "DISABLED"), 2)
+end)
+
+SecPremPaths:CreateSlider("Fling Speed Multiplier", 1, 100, 50, "FlingSpeedMultiplier", function(val)
+    _G.FlingSpeedMultiplier = val / 10
+end)
+
+local SecPremPanel = TabPremium:CreateSection("Fling Activation Panel")
+SecPremPanel:CreateParagraph("Information", "Show/hide fling buttons on your screen.")
+
+for _, pathInfo in ipairs(FlingPaths) do
+    local currentInfo = pathInfo
+    SecPremPanel:CreateButton(currentInfo.display:upper(), function()
+        local currentState = ExternalButtonStates[currentInfo.id] or false
+        local newState = not currentState
+        ExternalButtonStates[currentInfo.id] = newState
+        
+        local extBtn = PathButtons[currentInfo.id]
+        if extBtn then
+            if _G.CustomPathsEnabled then
+                SafeSetVisible(extBtn, newState)
+            end
+        end
+        
+        if newState then
+            if _G.CustomPathsEnabled then
+                Library:CreateNotification("Custom Paths", currentInfo.display .. " button is now VISIBLE.", 1.5)
+            else
+                Library:CreateNotification("Custom Paths", currentInfo.display .. " button enabled, but turn on 'Enable Custom Paths' first.", 2.5)
+            end
+        else
+            Library:CreateNotification("Custom Paths", currentInfo.display .. " button is now HIDDEN.", 1.5)
+        end
+    end)
+end
+
+local SecPremCam = TabPremium:CreateSection("Camlock Targeting Alignment")
+SecPremCam:CreateToggle("Camlock", Config.CamlockEnabled, "CamlockEnabled", {}, function(state)
+    _G.CamlockEnabled = state
+    _G.CamlockActive = state
+    Config.CamlockEnabled = state
+    Config.CamlockActive = state
+    SaveConfig()
+    SafeSetVisible(_G.ExtCamlockBtn, state)
+    if state then
+        SafeSetText(_G.ExtCamlockBtn, "CAMLOCK [ON]")
+    else
+        SafeSetText(_G.ExtCamlockBtn, "CAMLOCK")
+    end
+end)
+
+local SecPremWH = TabPremium:CreateSection("Wallhop Consolidated Panel")
+
+local WallhopMainToggle = SecPremWH:CreateToggle("Enable Wallhop System", Config.WallhopEnabled, "WallhopEnabled", {}, function(state)
+    _G.WallhopEnabled = state
+    _G.WallhopActive = state
+    Config.WallhopEnabled = state
+    Config.WallhopActive = state
+    SaveConfig()
+    updateWallhopButtonsSync()
+    Library:CreateNotification("Wallhop System", "Wallhop Master Toggle: " .. (state and "ENABLED" or "DISABLED"), 2.0)
+end)
+
+SecPremWH:CreateToggle("Enable Stud (Raycast) Detection", Config.WallhopStudEnabled, "WallhopStudEnabled", {}, function(state)
+    _G.WallhopStudEnabled = state
+    Config.WallhopStudEnabled = state
+    SaveConfig()
+    Library:CreateNotification("Wallhop Detection", "Stud Detection: " .. (state and "ENABLED" or "DISABLED"), 2.0)
+end)
+
+local WallhopModeDropdown = SecPremWH:CreateDropdown("Wallhop Mode", {"Manual", "Automatic"}, Config.WallhopMode, "WallhopMode", function(val)
+    _G.WallhopMode = val
+    Config.WallhopMode = val
+    SaveConfig()
+    Library:CreateNotification("Wallhop System", "Wallhop Mode: " .. val, 2.0)
+end)
+
+local WallhopTypeDropdown = SecPremWH:CreateDropdown("Wallhop Type", {"Normal", "Instant", "Ultra"}, Config.WallhopType, "WallhopType", function(val)
+    _G.WallhopType = val
+    Config.WallhopType = val
+    SaveConfig()
+    updateWallhopButtonsSync()
+    Library:CreateNotification("Wallhop System", "Wallhop Type: " .. val, 2.0)
+end)
+
+SecPremWH:CreateDropdown("Wallhop Detection Mode", {"Raycast Only", "Bounding Box", "Hybrid"}, Config.WallhopDetectionMode, "WallhopDetectionMode", function(val)
+    _G.WallhopDetectionMode = val
+    Config.WallhopDetectionMode = val
+    SaveConfig()
+    Library:CreateNotification("Wallhop Detection", "Mode: " .. val, 2.0)
+end)
+
+SecPremWH:CreateDropdown("Wallhop Action Style", {"Default", "Front-to-Back Flick", "Back-to-Front Flick"}, Config.WallhopFlickMode, "WallhopFlickMode", function(val)
+    _G.WallhopFlickMode = val
+    Config.WallhopFlickMode = val
+    SaveConfig()
+    Library:CreateNotification("Wallhop Action", "Style: " .. val, 2.0)
+end)
+
+SecPremWH:CreateSlider("Wallhop Distance Range (Studs)", 1, 15, Config.WH_Distance, "WH_Distance", function(val)
+    _G.WallHopDist = val
+    Config.WH_Distance = val
+    SaveConfig()
+end)
+
+SecPremWH:CreateParagraph("Wallhop Guidelines", "Normal: character-based rotation.\nInstant: CFrame-based camera tilt/flick.\nUltra: combines both based on Shift-Lock.")
+
+SecPremWH:CreateButton("Bot Walk System", function()
+    local success, err = pcall(function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/gamerlatahzan-design/SSLH-SourceCode-/main/SourceCodePathFinder.lua"))()
+    end)
+    if success then
+        Library:CreateNotification("Bot Walk System", "Bot Walk System loaded successfully!", 3)
+    else
+        Library:CreateNotification("Bot Walk System Error", "Failed to load script: " .. tostring(err), 3)
+    end
+end)
+
+-- --- TAB 6: KEYBIND SETTINGS ---
+local SecKeybinds = TabKeybinds:CreateSection("Custom Keybind System")
+SecKeybinds:CreateParagraph("Information", "Click Keybind box and press physical key to bind. Set to None to clear.")
+
+local function RegisterKeybindUI(section, label, configKey, defaultVal)
+    local savedVal = Config["Keybind_" .. configKey] or defaultVal
+    local parsedCode = (savedVal == "None" and Enum.KeyCode.None) or (typeof(savedVal) == "string" and GetKeyCode(savedVal)) or savedVal
+    
+    section:CreateKeybind(label, parsedCode, configKey .. "Keybind", function(keyCode)
+        Keybinds[configKey] = keyCode
+        Config["Keybind_" .. configKey] = keyCode.Name
+        SaveConfig()
+        Library:CreateNotification("Keybind", label .. " set to: " .. keyCode.Name, 2)
+    end)
+end
+
+local keybindsList = {
+    {"Follow Toggle Key", "FollowToggle", "None"},
+    {"Auto Walk Toggle Key", "AutoWalkToggle", "None"},
+    {"Auto Pass Toggle Key", "AutoPassToggle", "None"},
+    {"Range Chase Toggle Key", "RangeChaseToggle", "None"},
+    {"Flick Toggle Key", "FlickToggle", "None"},
+    {"Auto Hold Toggle Key", "AutoHoldToggle", "None"},
+    {"Trip Fall Toggle Key", "TripToggle", "None"},
+    {"Freeze Toggle Key", "FreezeToggle", "None"},
+    {"Infinite Jump Toggle Key", "InfJumpToggle", "None"},
+    {"Wallhop Toggle Key", "WallhopToggle", "None"},
+    {"Hitbox Expander Toggle Key", "HitboxToggle", "None"},
+    {"Crosshair Toggle Key", "CrosshairToggle", "None"},
+    {"Camlock Toggle Key", "CamlockToggle", "None"},
+    {"walkspeed Toggle Key", "TPWalkToggle", "None"},
+    {"Desync Shield Toggle Key", "DesyncImmunityToggle", "None"}
+}
+
+for _, k in ipairs(keybindsList) do
+    RegisterKeybindUI(SecKeybinds, k[1], k[2], k[3])
+end
+
+local SecKeybindsFling = TabKeybinds:CreateSection("Custom Fling Keybinds")
+SecKeybindsFling:CreateParagraph("Information", "Assign hotkeys to execute your custom coordinate paths directly [1].")
+
+for _, pathInfo in ipairs(FlingPaths) do
+    RegisterKeybindUI(SecKeybindsFling, pathInfo.display .. " Keybind", pathInfo.id, "None")
+end
+
+-- --- TAB 7: BUTTON CONTROLS ---
+local SecControlsScale = TabControls:CreateSection("External Button Scales (%)")
+SecControlsScale:CreateParagraph("Information", "Adjust the scale of each floating button dynamically.")
+
+SecControlsScale:CreateSlider("External Buttons Size", 10, 200, 100, "ExtScaleValue", function(val)
+    _G.ExtScaleValue = val
+    UpdateAllButtonsSize(val / 100)
+end)
+
+local SecControlsWindow = TabControls:CreateSection("Window Settings")
+SecControlsWindow:CreateToggle("Lock Main UI Dragging", Config.BuiltIn_LockDrag or false, "BuiltIn_LockDrag", {}, function(state)
+    Library.Settings.DragLocked = state
+    UpdateAllButtonsDragLock(state)
+end)
+
+-- ========================================================================
+-- [[ 3. ADAPTER & INSTANSIASI TOMBOL MELAYANG EKSTERNAL ]]
+-- ========================================================================
+-- Berjalan mulus setelah kontainer "Nexus_Compkiller_UI" dan "Library.Settings" aktif
+
+local function CreateExternalButtonAdapter(flag, text, callback, buttonType)
+    -- Safe indexing preventer agar tidak crash jika Settings kosong
+    local shape = (Library.Settings and Library.Settings.ExternalShape) or "Round"
+    local typeVal = buttonType or "Click"
+    
+    local extFrame = Library:CreateExternalButton(text, typeVal, shape, flag, callback)
+    
+    local controller = {}
+    controller.Instance = extFrame
+    
+    function controller:SetVisible(state)
+        if extFrame then extFrame.Visible = state end
+    end
+    
+    function controller:SetText(val)
+        if extFrame then
+            local btn = extFrame:FindFirstChildOfClass("TextButton")
+            if btn then btn.Text = tostring(val) end
+        end
+    end
+    
+    function controller:SetDragLock(locked) end
+    function controller:SetSize(scaleValue)
+        if extFrame then extFrame.Size = UDim2.new(0, 0, 0, 30) end
+    end
+    
+    return controller
+end
+
+_G.ExtFollowBtn = CreateExternalButtonAdapter("ExtFollow", "AUTO FOLLOW", function()
+    if not _G.FollowEnabled then return end
+    _G.FollowActive = not _G.FollowActive
+    if _G.FollowActive then
+        SafeSetText(_G.ExtFollowBtn, "FOLLOWING")
+    else
+        SafeSetText(_G.ExtFollowBtn, "AUTO FOLLOW")
+    end
+end, "Toggle")
+RegisterExternalButton(_G.ExtFollowBtn)
+
+_G.ExtFreezeBtn = CreateExternalButtonAdapter("ExtFreeze", "FREEZE", function()
+    if isFreezing then stopFreeze() else startFreeze() end
+end, "Toggle")
+RegisterExternalButton(_G.ExtFreezeBtn)
+
+_G.ExtFlickBtn = CreateExternalButtonAdapter("ExtFlick", "FLICK", function()
+    _G.FlickActive = not _G.FlickActive
+    if _G.FlickActive then
+        SafeSetText(_G.ExtFlickBtn, "FLICKING")
+    else
+        SafeSetText(_G.ExtFlickBtn, "FLICK")
+    end
+end, "Toggle")
+RegisterExternalButton(_G.ExtFlickBtn)
+
+_G.ExtHoldBtn = CreateExternalButtonAdapter("ExtHold", "HOLD BOMB", function()
+    _G.AutoHoldActive = not _G.AutoHoldActive
+    if _G.AutoHoldActive then
+        SafeSetText(_G.ExtHoldBtn, "HOLDING")
+    else
+        SafeSetText(_G.ExtHoldBtn, "HOLD BOMB")
+    end
+end, "Toggle")
+RegisterExternalButton(_G.ExtHoldBtn)
+
+_G.ExtPassBtn = CreateExternalButtonAdapter("ExtPass", "PASS BOMB", function()
+    triggerManualPass()
+end, "Click")
+RegisterExternalButton(_G.ExtPassBtn)
+
+_G.ExtAutoWalkBtn = CreateExternalButtonAdapter("ExtAutoWalk", "AUTO WALK", function()
+    _G.AutoWalkActive = not _G.AutoWalkActive
+    if _G.AutoWalkActive then
+        SafeSetText(_G.ExtAutoWalkBtn, "WALKING")
+    else
+        SafeSetText(_G.ExtAutoWalkBtn, "AUTO WALK")
+    end
+end, "Toggle")
+RegisterExternalButton(_G.ExtAutoWalkBtn)
+
+_G.ExtRangeChaseBtn = CreateExternalButtonAdapter("ExtRangeChase", "RANGE CHASE", function()
+    _G.RangeChaseEnabled = not _G.RangeChaseEnabled
+    if _G.RangeChaseEnabled then
+        SafeSetText(_G.ExtRangeChaseBtn, "CHASING")
+    else
+        SafeSetText(_G.ExtRangeChaseBtn, "RANGE CHASE")
+    end
+end, "Toggle")
+RegisterExternalButton(_G.ExtRangeChaseBtn)
+
+_G.ExtTripBtn = CreateExternalButtonAdapter("ExtTripFall", "TRIP FALL", function()
+    _G.TripEnabled = not _G.TripEnabled
+    ApplyTrip(_G.TripEnabled)
+    if _G.TripEnabled then
+        SafeSetText(_G.ExtTripBtn, "TRIPPED")
+    else
+        SafeSetText(_G.ExtTripBtn, "TRIP FALL")
+    end
+end, "Toggle")
+RegisterExternalButton(_G.ExtTripBtn)
+
+_G.ExtCamlockBtn = CreateExternalButtonAdapter("ExtCamlock", "CAMLOCK", function()
+    if not _G.CamlockEnabled then return end
+    _G.CamlockActive = not _G.CamlockActive
+    if _G.CamlockActive then
+        SafeSetText(_G.ExtCamlockBtn, "CAMLOCK [ON]")
+    else
+        SafeSetText(_G.ExtCamlockBtn, "CAMLOCK")
+    end
+end, "Toggle")
+RegisterExternalButton(_G.ExtCamlockBtn)
+
+_G.ExtDesyncImmunityBtn = CreateExternalButtonAdapter("ExtDesyncShield", "DESYNC SHIELD", function()
+    if not _G.DesyncImmunityEnabled then return end
+    _G.DesyncImmunityActive = not _G.DesyncImmunityActive
+    setCharacterCanTouch(not _G.DesyncImmunityActive)
+    if _G.DesyncImmunityActive then
+        SafeSetText(_G.ExtDesyncImmunityBtn, "SHIELD [ON]")
+    else
+        SafeSetText(_G.ExtDesyncImmunityBtn, "DESYNC SHIELD")
+    end
+end, "Toggle")
+RegisterExternalButton(_G.ExtDesyncImmunityBtn)
+
+_G.ExtWHNormalBtn = CreateExternalButtonAdapter("ExtWHNormal", "wh_normal", function()
+    ToggleFeature("Wallhop")
+end, "Toggle")
+RegisterExternalButton(_G.ExtWHNormalBtn)
+
+_G.ExtWHInstantBtn = CreateExternalButtonAdapter("ExtWHInstant", "wh_instant", function()
+    ToggleFeature("Wallhop")
+end, "Toggle")
+RegisterExternalButton(_G.ExtWHInstantBtn)
+
+_G.ExtWHUltraBtn = CreateExternalButtonAdapter("ExtWHUltra", "wh_ultra", function()
+    ToggleFeature("Wallhop")
+end, "Toggle")
+RegisterExternalButton(_G.ExtWHUltraBtn)
+
+-- ========================================================
+-- [[ DYNAMIC CUSTOM FLING PATH BUTTON GENERATION ]]
+-- ========================================================
+for _, pathInfo in ipairs(FlingPaths) do
+    local currentInfo = pathInfo
+    local btn = CreateExternalButtonAdapter("ExtPath_" .. currentInfo.id, currentInfo.display:upper(), function()
+        triggerPath(currentInfo)
+    end, "Click")
+    
+    RegisterExternalButton(btn)
+    PathButtons[currentInfo.id] = btn
+    SafeSetVisible(btn, false) -- PERBAIKAN BUG: Mengatur status awal semua tombol fling kustom agar tersembunyi demi estetika layar
+end
+
+-- ========================================================
+-- [[ MOVEMENT, PHYSICS, & CORE INPUT AUTOMATIONS ]]
 -- ========================================================
 SafeConnect(RunService.Heartbeat, LPH_NO_VIRTUALIZE(function(dt)
     if not LocalPlayer.Character or not LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then return end
@@ -1959,14 +2392,12 @@ SafeConnect(RunService.Heartbeat, LPH_NO_VIRTUALIZE(function(dt)
     lastHadBomb = amIHolder
 end))
 
--- STRETCH RESOLUTION RENDER LOOP
 SafeConnect(RunService.RenderStepped, function()
     if _G.ResolutionEnabled and _G.ResolutionValue ~= 1.00 then
         Camera.CFrame = Camera.CFrame * CFrame_new(0, 0, 0, 1, 0, 0, 0, _G.ResolutionValue, 0, 0, 0, 1)
     end
 end)
 
--- WALLHOP & MULTI-JUMP CONNECTOR (PREMIUM IMPLEMENTATION)
 local JumpRequestConnection = UserInputService.JumpRequest:Connect(function()
     isSticking = false 
 
@@ -2007,9 +2438,6 @@ local JumpRequestConnection = UserInputService.JumpRequest:Connect(function()
 end)
 table.insert(_G.LouisConnections, JumpRequestConnection)
 
--- ========================================================================
--- [[ KEYBOARD QUICK SHORTCUTS CONNECTION ]]
--- ========================================================================
 ToggleFeature = function(name)
     if name == "Follow" then
         _G.FollowEnabled = not _G.FollowEnabled
@@ -2233,8 +2661,8 @@ SafeSetVisible(_G.ExtTripBtn, _G.TripEnabled)
 SafeSetVisible(_G.ExtCamlockBtn, _G.CamlockEnabled)
 SafeSetVisible(_G.ExtDesyncImmunityBtn, _G.DesyncImmunityEnabled)
 
--- Sinkronisasi awal Wallhop Button layout
 updateWallhopButtonsSync()
+setupPathButtons() -- PERBAIKAN BUG: Menjalankan sinkronisasi awal status Custom Path pada saat startup
 
 if _G.LocalHitboxEnabled then
     pcall(updatePlayersHitboxes)
