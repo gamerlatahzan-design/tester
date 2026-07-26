@@ -1,5 +1,5 @@
 -- [[ LOUIS HUB: SIMPLIFIED HYBRID LOADER ]]
--- AUTH: Louis | VERSION: 1.6 (FREE - WITH CATEGORY SELECTOR)
+-- AUTH: Louis | VERSION: 1.7 (FREE - WITH CATEGORY SELECTOR)
 
 local Players = game:GetService("Players")
 local HttpService = game:GetService("HttpService")
@@ -234,10 +234,17 @@ local function CreateSelectorUI(gameData, onSelected)
     LiteIcon.Position = UDim2.new(0, 0, 0.5, 0)
     LiteIcon.AnchorPoint = Vector2.new(0, 0.5)
     LiteIcon.BackgroundTransparency = 1
-    LiteIcon.Image = "rbxassetid://7734091286" -- Verified Official Lucide Zap Icon
+    LiteIcon.Image = "rbxassetid://10723343321" -- Raw Lucide Zap Image Asset ID
     LiteIcon.ImageColor3 = Color3.fromRGB(220, 180, 255)
     LiteIcon.ScaleType = Enum.ScaleType.Fit
     LiteIcon.Parent = LiteHeaderRow
+
+    -- Fallback handler if image fails to render
+    LiteIcon:GetPropertyChangedSignal("IsLoaded"):Connect(function()
+        if not LiteIcon.IsLoaded then
+            LiteIcon.Image = "rbxassetid://10709819149" -- Automatic Fallback Asset ID
+        end
+    end)
 
     local LiteTitle = Instance.new("TextLabel")
     LiteTitle.Size = UDim2.new(1, -20, 1, 0)
@@ -281,7 +288,7 @@ local function CreateSelectorUI(gameData, onSelected)
     MaxIcon.Position = UDim2.new(0, 0, 0.5, 0)
     MaxIcon.AnchorPoint = Vector2.new(0, 0.5)
     MaxIcon.BackgroundTransparency = 1
-    MaxIcon.Image = "rbxassetid://10723376114" -- Verified Lucide Flame Icon
+    MaxIcon.Image = "rbxassetid://10723376114" -- Raw Lucide Flame Image Asset ID
     MaxIcon.ImageColor3 = Color3.fromRGB(220, 180, 255)
     MaxIcon.ScaleType = Enum.ScaleType.Fit
     MaxIcon.Parent = MaxHeaderRow
