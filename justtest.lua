@@ -1,5 +1,5 @@
 -- [[ LOUIS HUB: SIMPLIFIED HYBRID LOADER ]]
--- AUTH: Louis | VERSION: 1.5 (FREE - WITH CATEGORY SELECTOR)
+-- AUTH: Louis | VERSION: 1.6 (FREE - WITH CATEGORY SELECTOR)
 
 local Players = game:GetService("Players")
 local HttpService = game:GetService("HttpService")
@@ -234,7 +234,7 @@ local function CreateSelectorUI(gameData, onSelected)
     LiteIcon.Position = UDim2.new(0, 0, 0.5, 0)
     LiteIcon.AnchorPoint = Vector2.new(0, 0.5)
     LiteIcon.BackgroundTransparency = 1
-    LiteIcon.Image = "rbxassetid://10734984000" -- Fixed Lucide: Zap Icon
+    LiteIcon.Image = "rbxassetid://7734091286" -- Verified Official Lucide Zap Icon
     LiteIcon.ImageColor3 = Color3.fromRGB(220, 180, 255)
     LiteIcon.ScaleType = Enum.ScaleType.Fit
     LiteIcon.Parent = LiteHeaderRow
@@ -281,7 +281,7 @@ local function CreateSelectorUI(gameData, onSelected)
     MaxIcon.Position = UDim2.new(0, 0, 0.5, 0)
     MaxIcon.AnchorPoint = Vector2.new(0, 0.5)
     MaxIcon.BackgroundTransparency = 1
-    MaxIcon.Image = "rbxassetid://10723376114" -- Fixed Lucide: Flame Icon
+    MaxIcon.Image = "rbxassetid://10723376114" -- Verified Lucide Flame Icon
     MaxIcon.ImageColor3 = Color3.fromRGB(220, 180, 255)
     MaxIcon.ScaleType = Enum.ScaleType.Fit
     MaxIcon.Parent = MaxHeaderRow
