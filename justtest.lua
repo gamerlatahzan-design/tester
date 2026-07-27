@@ -1,5 +1,5 @@
 -- [[ LOUIS HUB: SIMPLIFIED HYBRID LOADER ]]
--- AUTH: Louis | VERSION: 1.7 (FREE - WITH CATEGORY SELECTOR)
+-- AUTH: Louis | VERSION: 1.8 (FREE - WITH CATEGORY SELECTOR)
 
 local Players = game:GetService("Players")
 local HttpService = game:GetService("HttpService")
@@ -222,7 +222,7 @@ local function CreateSelectorUI(gameData, onSelected)
     InfoListLayout.Padding = UDim.new(0, 6)
     InfoListLayout.Parent = InfoContent
 
-    -- Lite Info Section (Lucide Icon: zap)
+    -- Lite Info Section (Lucide Icon: zap via rbxthumb)
     local LiteHeaderRow = Instance.new("Frame")
     LiteHeaderRow.Size = UDim2.new(1, 0, 0, 16)
     LiteHeaderRow.BackgroundTransparency = 1
@@ -234,17 +234,10 @@ local function CreateSelectorUI(gameData, onSelected)
     LiteIcon.Position = UDim2.new(0, 0, 0.5, 0)
     LiteIcon.AnchorPoint = Vector2.new(0, 0.5)
     LiteIcon.BackgroundTransparency = 1
-    LiteIcon.Image = "rbxassetid://10723343321" -- Raw Lucide Zap Image Asset ID
+    LiteIcon.Image = "rbxthumb://type=Asset&id=7734091286&w=150&h=150" -- Using rbxthumb for guaranteed render
     LiteIcon.ImageColor3 = Color3.fromRGB(220, 180, 255)
     LiteIcon.ScaleType = Enum.ScaleType.Fit
     LiteIcon.Parent = LiteHeaderRow
-
-    -- Fallback handler if image fails to render
-    LiteIcon:GetPropertyChangedSignal("IsLoaded"):Connect(function()
-        if not LiteIcon.IsLoaded then
-            LiteIcon.Image = "rbxassetid://10709819149" -- Automatic Fallback Asset ID
-        end
-    end)
 
     local LiteTitle = Instance.new("TextLabel")
     LiteTitle.Size = UDim2.new(1, -20, 1, 0)
@@ -276,7 +269,7 @@ local function CreateSelectorUI(gameData, onSelected)
     Separator.BorderSizePixel = 0
     Separator.Parent = InfoContent
 
-    -- Max Info Section (Lucide Icon: flame)
+    -- Max Info Section (Lucide Icon: flame via rbxthumb)
     local MaxHeaderRow = Instance.new("Frame")
     MaxHeaderRow.Size = UDim2.new(1, 0, 0, 16)
     MaxHeaderRow.BackgroundTransparency = 1
@@ -288,7 +281,7 @@ local function CreateSelectorUI(gameData, onSelected)
     MaxIcon.Position = UDim2.new(0, 0, 0.5, 0)
     MaxIcon.AnchorPoint = Vector2.new(0, 0.5)
     MaxIcon.BackgroundTransparency = 1
-    MaxIcon.Image = "rbxassetid://10723376114" -- Raw Lucide Flame Image Asset ID
+    MaxIcon.Image = "rbxthumb://type=Asset&id=10723376114&w=150&h=150" -- Using rbxthumb for guaranteed render
     MaxIcon.ImageColor3 = Color3.fromRGB(220, 180, 255)
     MaxIcon.ScaleType = Enum.ScaleType.Fit
     MaxIcon.Parent = MaxHeaderRow
@@ -486,14 +479,14 @@ local function CreateSelectorUI(gameData, onSelected)
     DiscordStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
     DiscordStroke.Parent = DiscordFrame
 
-    -- Discord Icon
+    -- Discord Icon via rbxthumb
     local DiscordIcon = Instance.new("ImageLabel")
     DiscordIcon.Name = "DiscordIcon"
     DiscordIcon.Size = UDim2.new(0, 22, 0, 22)
     DiscordIcon.Position = UDim2.new(0, 14, 0.5, 0)
     DiscordIcon.AnchorPoint = Vector2.new(0, 0.5)
     DiscordIcon.BackgroundTransparency = 1
-    DiscordIcon.Image = "rbxassetid://10734888228" -- Lucide Message/Community Icon
+    DiscordIcon.Image = "rbxthumb://type=Asset&id=10734888228&w=150&h=150" -- Using rbxthumb
     DiscordIcon.ImageColor3 = Color3.fromRGB(180, 140, 255)
     DiscordIcon.ScaleType = Enum.ScaleType.Fit
     DiscordIcon.Parent = DiscordFrame
