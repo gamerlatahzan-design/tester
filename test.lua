@@ -9,20 +9,22 @@ local RunService = game:GetService("RunService")
 local TeleportService = game:GetService("TeleportService")
 local HttpService = game:GetService("HttpService")
 local UserInputService = game:GetService("UserInputService")
+local Lighting = game:GetService("Lighting")
 local LocalPlayer = Players.LocalPlayer
 
--- Global Lock Position State
+-- Global State Flags
 local isLocked = false
-
--- Global Fast Gacha & Whitelist States
 local isFastGacha = false
 local gachaSpeed = 0.05
-local petWhitelist = {}   -- Pet Whitelist Table
-local auraWhitelist = {}  -- Aura Whitelist Table
-local lockedOldItems = {} -- Anti-Deletion Inventory Protection Shield
-local isAutoEvolve = false -- Auto Evolve Pet loop state
+local petWhitelist = {}
+local auraWhitelist = {}
+local lockedOldItems = {}
+local isAutoEvolve = false
+local disablePopupsConnection = nil
 
--- 1. LIST OF ALL OFFICIAL CRYSTALS
+-- ========================================================
+-- DATA TABLES
+-- ========================================================
 local allCrystals = {
 	"Industrial Crystal",
 	"Jungle Crystal",
@@ -36,7 +38,6 @@ local allCrystals = {
 	"Blue Crystal"
 }
 
--- 2. COMPLETE LIST OF ALL PET NAMES
 local masterPetList = {
 	-- Industrial Crystal
 	"Apex Overlord",
@@ -101,7 +102,6 @@ local masterPetList = {
 	"Orange Hedgehog"
 }
 
--- 3. COMPLETE LIST OF ALL AURA NAMES
 local masterAuraList = {
 	-- Jungle Aura
 	"Entropic Blast Aura",
@@ -121,11 +121,35 @@ local masterAuraList = {
 	"Basic Aura"
 }
 
+local gymLocationsMap = {
+	["Starter Island"] = "Starter Island",
+	["Legend Beach"] = "Legend Beach",
+	["Frost Gym"] = "Frost Gym",
+	["Mythical Gym"] = "Mythical Gym",
+	["Eternal Gym"] = "Eternal Gym",
+	["Legends Gym"] = "Legends Gym",
+	["Muscle King"] = "Muscle King",
+	["Jungle Gym"] = "Jungle Gym",
+	["Industrial Gym"] = "Industrial Gym"
+}
+
+local machineTypesMap = {
+	"Treadmill",
+	"Bench Press",
+	"Squat",
+	"Pullup",
+	"Deadlift",
+	"Boulder"
+}
+
+local selectedGymLocation = "Starter Island"
+local selectedMachineName = "Treadmill"
+
 local selectedCrystal = allCrystals[1]
 local currentSelectedPet = masterPetList[1]
 local currentSelectedAura = masterAuraList[1]
 
--- Helper Number Formatter (e.g. 1.5M, 893.6B)
+-- Helper Number Formatter
 local function formatAbbrev(n)
 	n = tonumber(n) or 0
 	if n >= 1e15 then return string.format("%.2fQ", n / 1e15)
@@ -137,7 +161,7 @@ local function formatAbbrev(n)
 end
 
 -- ========================================================
--- 2. CREATE MAIN WINDOW
+-- CREATE MAIN WINDOW
 -- ========================================================
 local Window = Luna:CreateWindow({
 	Name = "Muscle Legends",
@@ -154,7 +178,6 @@ local Window = Luna:CreateWindow({
 	KeySystem = false,
 })
 
--- 3. CREATE HOME TAB
 Window:CreateHomeTab({
 	SupportedExecutors = {
 		"Synapse X", "Krnl", "Fluxus", "Script-Ware", "Wave", "Solara", "Delta", "Codex"
@@ -163,7 +186,7 @@ Window:CreateHomeTab({
 	Icon = 1
 })
 
--- Helper function to automatically equip the punch tool
+-- Helper: Auto-equip Punch Tool
 local function equipPunchTool()
 	local backpack = LocalPlayer:FindFirstChild("Backpack")
 	local character = LocalPlayer.Character
@@ -175,11 +198,9 @@ local function equipPunchTool()
 	end
 end
 
--- INVENTORY PROTECTION SYSTEM
+-- Helper: Lock Inventory Shield
 local function lockCurrentInventory()
 	lockedOldItems = {}
-	
-	-- Lock Existing Pets
 	local petsFolder = LocalPlayer:FindFirstChild("petsFolder")
 	if petsFolder then
 		for _, category in pairs(petsFolder:GetChildren()) do
@@ -189,7 +210,6 @@ local function lockCurrentInventory()
 		end
 	end
 
-	-- Lock Existing Auras
 	local aurasFolder = LocalPlayer:FindFirstChild("aurasFolder") or LocalPlayer:FindFirstChild("auraFolder")
 	if aurasFolder then
 		for _, category in pairs(aurasFolder:GetChildren()) do
@@ -198,12 +218,11 @@ local function lockCurrentInventory()
 			end
 		end
 	end
-	print("[PROTECTION] All previously owned Pets & Auras are locked and safe!")
+	print("[PROTECTION] Existing inventory locked and protected!")
 end
 
--- NEW GACHA ITEM FILTER
+-- Helper: Filter New Gacha Items
 local function filterNewGachaItems()
-	-- 1. Filter New Pets
 	local petsFolder = LocalPlayer:FindFirstChild("petsFolder")
 	if petsFolder then
 		for _, category in pairs(petsFolder:GetChildren()) do
@@ -220,7 +239,6 @@ local function filterNewGachaItems()
 		end
 	end
 
-	-- 2. Filter New Auras
 	local aurasFolder = LocalPlayer:FindFirstChild("aurasFolder") or LocalPlayer:FindFirstChild("auraFolder")
 	if aurasFolder then
 		for _, category in pairs(aurasFolder:GetChildren()) do
@@ -242,7 +260,7 @@ local function filterNewGachaItems()
 	end
 end
 
--- DISABLE GAME CUTSCENE ANIMATIONS
+-- Helper: Disable Egg Cutscene Animations
 local function disableEggAnimation()
 	local playerGui = LocalPlayer:FindFirstChild("PlayerGui")
 	if playerGui then
@@ -257,7 +275,7 @@ local function disableEggAnimation()
 	end
 end
 
--- AUTO PET EVOLUTION FUNCTION
+-- Helper: Auto Pet Evolution
 local function evolveAllPets()
 	local petsFolder = LocalPlayer:FindFirstChild("petsFolder")
 	if not petsFolder then return end
@@ -269,7 +287,7 @@ local function evolveAllPets()
 	end
 end
 
--- FULL STATS GRABBER HELPER
+-- Helper: Grab All Statistics
 local function getFullStats(target)
 	if not target then return nil end
 	local ls = target:FindFirstChild("leaderstats")
@@ -314,6 +332,7 @@ TabFarming:CreateLabel({
 	Style = 2
 })
 
+-- TRAINING TOOL FARM
 TabFarming:CreateSection("Training Tool Settings")
 
 local selectedTool = "Weight"
@@ -349,33 +368,47 @@ TabFarming:CreateToggle({
 	end
 }, "AutoStrength")
 
--- GYM MACHINES FARM (SELAIN REP BIASA)
+-- NON-TOOL GYM MACHINES FARM (ACCURATE PER-GYM SYSTEM)
 TabFarming:CreateSection("Gym Machines Farm (Non-Tool)")
 
-local gymMachines = {
-	"Treadmill (Agility)",
-	"Bench Press (Strength)",
-	"Squat (Strength/Durability)",
-	"Pull-up (Strength)",
-	"Deadlift (Strength)"
+local gymOptionsList = {
+	"Starter Island",
+	"Legend Beach",
+	"Frost Gym",
+	"Mythical Gym",
+	"Eternal Gym",
+	"Legends Gym",
+	"Muscle King",
+	"Jungle Gym",
+	"Industrial Gym"
 }
-local selectedMachineType = gymMachines[1]
-local autoGymMachine = false
 
 TabFarming:CreateDropdown({
-	Name = "Select Gym Machine Type",
-	Description = "Select the gym equipment machine to auto-train",
-	Options = gymMachines,
-	CurrentOption = {gymMachines[1]},
+	Name = "1. Select Gym Location",
+	Description = "Select the gym where you want to train",
+	Options = gymOptionsList,
+	CurrentOption = {gymOptionsList[1]},
 	MultipleOptions = false,
 	Callback = function(OptionTable)
-		selectedMachineType = typeof(OptionTable) == "table" and OptionTable[1] or OptionTable
+		selectedGymLocation = typeof(OptionTable) == "table" and OptionTable[1] or OptionTable
 	end
-}, "GymMachineDropdown")
+}, "GymLocationSelect")
 
+TabFarming:CreateDropdown({
+	Name = "2. Select Machine Type",
+	Description = "Select the machine equipment inside the chosen gym",
+	Options = machineTypesMap,
+	CurrentOption = {machineTypesMap[1]},
+	MultipleOptions = false,
+	Callback = function(OptionTable)
+		selectedMachineName = typeof(OptionTable) == "table" and OptionTable[1] or OptionTable
+	end
+}, "GymMachineSelect")
+
+local autoGymMachine = false
 TabFarming:CreateToggle({
-	Name = "Auto Farm Gym Machine",
-	Description = "Automatically uses the selected gym equipment without holding tools",
+	Name = "Auto Farm Selected Machine",
+	Description = "Teleports to and continuously trains on the selected gym machine",
 	CurrentValue = false,
 	Callback = function(State)
 		autoGymMachine = State
@@ -384,16 +417,28 @@ TabFarming:CreateToggle({
 				while autoGymMachine do
 					local char = LocalPlayer.Character
 					local hrp = char and char:FindFirstChild("HumanoidRootPart")
-					local keyword = selectedMachineType:split(" ")[1]:lower()
 					local machinesFolder = workspace:FindFirstChild("machinesFolder")
 
 					if hrp and machinesFolder then
+						local gymClean = selectedGymLocation:lower():gsub(" ", "")
+						local machClean = selectedMachineName:lower():gsub(" ", "")
+
+						-- Search for the exact machine model inside workspace.machinesFolder
 						for _, machine in pairs(machinesFolder:GetChildren()) do
-							if machine.Name:lower():find(keyword) then
-								local seat = machine:FindFirstChildWhichIsA("Seat") or machine:FindFirstChild("Seat") or machine:FindFirstChildWhichIsA("BasePart")
-								if seat then
-									firetouchinterest(hrp, seat, 0)
-									firetouchinterest(hrp, seat, 1)
+							local mNameClean = machine.Name:lower():gsub(" ", "")
+							if mNameClean:find(gymClean) and mNameClean:find(machClean) then
+								local interactPart = machine:FindFirstChildWhichIsA("Seat") 
+												  or machine:FindFirstChild("Seat") 
+												  or machine:FindFirstChild("Interact")
+												  or machine:FindFirstChild("Main")
+												  or machine:FindFirstChildWhichIsA("BasePart")
+
+								if interactPart then
+									-- Snap player onto machine interact pad
+									hrp.CFrame = interactPart.CFrame + Vector3.new(0, 2, 0)
+									firetouchinterest(hrp, interactPart, 0)
+									firetouchinterest(hrp, interactPart, 1)
+
 									if LocalPlayer:FindFirstChild("muscleEvent") then
 										LocalPlayer.muscleEvent:FireServer("rep")
 									end
@@ -408,12 +453,13 @@ TabFarming:CreateToggle({
 	end
 }, "AutoGymMachine")
 
+-- AUTO REBIRTH SECTION
 TabFarming:CreateSection("Auto Rebirth System")
 
 local maxRebirths = 999999999
 TabFarming:CreateInput({
 	Name = "Limit Rebirths (Stop Rebirth)",
-	Description = "Enter a Rebirth number to automatically stop auto-rebirth",
+	Description = "Enter target Rebirth number to automatically stop auto-rebirth",
 	PlaceholderText = "Example: 100",
 	CurrentValue = "",
 	Numeric = true,
@@ -460,11 +506,11 @@ TabFarming:CreateToggle({
 	end
 }, "AutoRebirth")
 
--- REBIRTH ANTI-TELEPORT BEACH
+-- REBIRTH ANTI-BEACH STAY
 local autoRebirthStay = false
 TabFarming:CreateToggle({
-	Name = "Auto Rebirth (Anti-Beach / Stay in Gym)",
-	Description = "Rebirths continuously and locks you at your current gym so you never teleport back to spawn beach",
+	Name = "Auto Rebirth (Anti-Beach / Lock In Gym)",
+	Description = "Rebirths and locks your character at your current gym so you never teleport back to spawn beach",
 	CurrentValue = false,
 	Callback = function(State)
 		autoRebirthStay = State
@@ -505,13 +551,13 @@ TabFarming:CreateToggle({
 	end
 }, "AutoRebirthStay")
 
--- AUTO CONSUME PROTEIN FOOD / EGG
+-- AUTO CONSUME FOOD/PROTEIN ITEMS
 TabFarming:CreateSection("Auto Consume Items (AFK)")
 
 local autoFood = false
 TabFarming:CreateToggle({
 	Name = "Auto Consume Protein Egg / Shake / Bar",
-	Description = "Automatically eats/consumes Protein Eggs, Bars, and Shakes from your backpack while AFK",
+	Description = "Automatically eats/consumes Protein Eggs, Bars, and Shakes from backpack",
 	CurrentValue = false,
 	Callback = function(State)
 		autoFood = State
@@ -1090,8 +1136,8 @@ local TabUtils = Window:CreateTab({
 	ShowTitle = true
 })
 
--- OFFICIAL IN-GAME BASIC CONTROLS (SIZE & SPEED RESMI MUSCLE LEGENDS)
-TabUtils:CreateSection("Official In-Game Controls (Size & Speed)")
+-- --- SECTION 1: OFFICIAL CONTROLS (SERVER-SYNCED) ---
+TabUtils:CreateSection("Official Controls (Synced with Game Settings)")
 
 TabUtils:CreateSlider({
 	Name = "Set Official Muscle Size",
@@ -1105,7 +1151,7 @@ TabUtils:CreateSlider({
 }, "OfficialSizeSlider")
 
 TabUtils:CreateButton({
-	Name = "Preset: Size 1 (Anti-Hitbox / Tiny)",
+	Name = "Preset: Official Size 1 (Anti-Hitbox / Tiny)",
 	Callback = function()
 		ReplicatedStorage.rEvents.changeSpeedSizeRemote:InvokeServer("changeSize", 1)
 		Luna:Notification({
@@ -1126,15 +1172,30 @@ TabUtils:CreateSlider({
 	Callback = function(Val)
 		pcall(function() ReplicatedStorage.rEvents.changeSpeedSizeRemote:InvokeServer("changeSpeed", Val) end)
 		pcall(function() ReplicatedStorage.rEvents.changeSpeedSizeRemote:InvokeServer("changeWalkSpeed", Val) end)
+	end
+}, "OfficialSpeedSlider")
+
+
+-- --- SECTION 2: NON-OFFICIAL CONTROLS (CLIENT-SIDE) ---
+TabUtils:CreateSection("Non-Official Controls (Client-Side Modifications)")
+
+TabUtils:CreateSlider({
+	Name = "Custom WalkSpeed (Client)",
+	Description = "Directly modifies Humanoid WalkSpeed value",
+	Range = {16, 300},
+	Increment = 1,
+	CurrentValue = 16,
+	Callback = function(Val)
 		if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
 			LocalPlayer.Character.Humanoid.WalkSpeed = Val
 		end
 	end
-}, "OfficialSpeedSlider")
+}, "CustomWalkSpeed")
 
 TabUtils:CreateSlider({
-	Name = "Set JumpPower",
-	Range = {50, 300},
+	Name = "Custom JumpPower (Client)",
+	Description = "Directly modifies Humanoid JumpPower value",
+	Range = {50, 350},
 	Increment = 1,
 	CurrentValue = 50,
 	Callback = function(Val)
@@ -1144,10 +1205,83 @@ TabUtils:CreateSlider({
 			hum.JumpPower = Val
 		end
 	end
-}, "JumpPower")
+}, "CustomJumpPower")
 
--- REDEEM ALL WORKING CODES
-TabUtils:CreateSection("Redeem Codes")
+
+-- --- SECTION 3: PERFORMANCE & VISUALS (ANTI-LAG & FPS BOOST) ---
+TabUtils:CreateSection("Performance & Clean Screen")
+
+-- Anti-Lag / Fast FPS Booster
+TabUtils:CreateButton({
+	Name = "🚀 Anti-Lag / Fast FPS Booster",
+	Description = "Lowers heavy textures, disables shadows & particles for super smooth FPS",
+	Callback = function()
+		-- Optimize Lighting
+		Lighting.GlobalShadows = false
+		Lighting.FogEnd = 9e9
+		Lighting.Brightness = 1
+		settings().Rendering.QualityLevel = 1
+
+		-- Optimize Workspace Assets
+		for _, v in pairs(workspace:GetDescendants()) do
+			if v:IsA("BasePart") and not v:IsA("MeshPart") then
+				v.Material = Enum.Material.SmoothPlastic
+				v.Reflectance = 0
+			elseif v:IsA("Decal") or v:IsA("Texture") then
+				v.Transparency = 1
+			elseif v:IsA("ParticleEmitter") or v:IsA("Trail") or v:IsA("Smoke") or v:IsA("Fire") then
+				v.Enabled = false
+			end
+		end
+		
+		Luna:Notification({
+			Title = "FPS Boosted",
+			Content = "Anti-Lag & Performance mode activated!",
+			Icon = "speed",
+			ImageSource = "Material"
+		})
+	end
+})
+
+-- Disable Training Stat Gain Popups / Frames
+local hidePopups = false
+TabUtils:CreateToggle({
+	Name = "Hide Training Stat Popups (Clean Screen)",
+	Description = "Removes floating frames and text (+Strength, +Agility, etc.) on screen while grinding",
+	CurrentValue = false,
+	Callback = function(State)
+		hidePopups = State
+		if hidePopups then
+			disablePopupsConnection = RunService.RenderStepped:Connect(function()
+				if hidePopups and LocalPlayer:FindFirstChild("PlayerGui") then
+					for _, gui in pairs(LocalPlayer.PlayerGui:GetDescendants()) do
+						if gui:IsA("BillboardGui") or gui:IsA("TextLabel") then
+							local txt = gui.Text or ""
+							if txt:find("%+") or txt:lower():find("strength") or txt:lower():find("agility") or txt:lower():find("durability") then
+								gui.Visible = false
+							end
+						end
+					end
+				end
+			end)
+			Luna:Notification({
+				Title = "Popups Disabled",
+				Content = "Stat increase frames and floating popups are now hidden.",
+				Icon = "visibility_off",
+				ImageSource = "Material"
+			})
+		else
+			if disablePopupsConnection then
+				disablePopupsConnection:Disconnect()
+				disablePopupsConnection = nil
+			end
+		end
+	end
+}, "HidePopupsToggle")
+
+
+-- --- SECTION 4: REDEEM PROMO CODES ---
+TabUtils:CreateSection("Redeem Promo Codes")
 
 local activeCodes = {
 	"junglegym500",
@@ -1188,6 +1322,8 @@ TabUtils:CreateButton({
 	end
 })
 
+
+-- --- SECTION 5: EXPLOITS & EXTRA UTILITIES ---
 TabUtils:CreateSection("Exploits & Extra Features")
 
 TabUtils:CreateToggle({
@@ -1586,7 +1722,7 @@ local TabSave = Window:CreateTab({
 })
 TabSave:BuildConfigSection()
 
--- Setup persistent listener for Lock Position across respawns
+-- Persistent Lock Position Listener
 LocalPlayer.CharacterAdded:Connect(function(char)
 	if isLocked then
 		task.wait(1)
@@ -1595,7 +1731,7 @@ LocalPlayer.CharacterAdded:Connect(function(char)
 	end
 end)
 
--- ANTI-AFK UTILITY LOOP
+-- Anti-AFK Loop
 task.spawn(function()
 	while true do
 		task.wait(600)
