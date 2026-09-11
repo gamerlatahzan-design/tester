@@ -1,7 +1,7 @@
 -- ========================================================
 --  LOUIS HUB - BLOX FRUITS (PRO MASTER SUITE)
---  Engine: Luna Interface Suite | Auto-Dimension & Fast Hit
---  Part 1: Core Engine, Movement, Full Quests & Farming [PATCHED]
+--  Engine: Luna Interface Suite | 100% Full English
+--  Complete Edition: All Tabs, Farming, Sea Events, Raids, ESP & Shop
 -- ========================================================
 
 -- ========================================================
@@ -32,7 +32,7 @@ LocalPlayer.Idled:Connect(function()
 end)
 
 -- ========================================================
--- LUNA INTERFACE SUITE (Auto-Fallback Loader)
+-- LUNA INTERFACE SUITE LOADER
 -- ========================================================
 local Luna = nil
 local lunaUrls = {
@@ -99,7 +99,7 @@ Window:CreateHomeTab({
 })
 
 -- ========================================================
--- CORE MOVEMENT & TELEPORT ENGINE (PATCHED & ANTI-STUTTER)
+-- CORE MOVEMENT & TELEPORT ENGINE
 -- ========================================================
 local isTweening = false
 local currentTween = nil
@@ -122,36 +122,35 @@ local function StopTween()
 	end
 end
 
--- Pintu Masuk dan Keluar Dimensi (Patched)
 local function CheckEntrance(targetPos)
 	local hrp = WaitHRP(LocalPlayer)
 	if not hrp then return end
 	local dist = (targetPos - hrp.Position).Magnitude
 
 	if World1 and dist > 10000 then
-		if targetPos.Y > 4000 then -- Masuk Sky 3
+		if targetPos.Y > 4000 then
 			ReplicatedStorage.Remotes.CommF_:InvokeServer("requestEntrance", Vector3.new(-7894.6, 5547.1, -380.2))
 			task.wait(0.5)
-		elseif hrp.Position.Y > 4000 and targetPos.Y < 2000 then -- Keluar Sky 3
+		elseif hrp.Position.Y > 4000 and targetPos.Y < 2000 then
 			ReplicatedStorage.Remotes.CommF_:InvokeServer("requestEntrance", Vector3.new(-4607, 874, -1667))
 			task.wait(0.5)
-		elseif targetPos.X > 50000 then -- Masuk Underwater
+		elseif targetPos.X > 50000 then
 			ReplicatedStorage.Remotes.CommF_:InvokeServer("requestEntrance", Vector3.new(61163.8, 11.6, 1819.7))
 			task.wait(0.5)
-		elseif hrp.Position.X > 50000 and targetPos.X < 20000 then -- Keluar Underwater
+		elseif hrp.Position.X > 50000 and targetPos.X < 20000 then
 			ReplicatedStorage.Remotes.CommF_:InvokeServer("requestEntrance", Vector3.new(4050, -1, -1814))
 			task.wait(0.5)
 		end
 	elseif World2 and dist > 10000 then
-		if targetPos.Z > 30000 then -- Cursed Ship
+		if targetPos.Z > 30000 then
 			ReplicatedStorage.Remotes.CommF_:InvokeServer("requestEntrance", Vector3.new(923.2, 126.9, 32852.8))
 			task.wait(0.5)
 		end
 	elseif World3 and dist > 10000 then
-		if targetPos.Y > 900 and targetPos.X > 4000 then -- Hydra Island
+		if targetPos.Y > 900 and targetPos.X > 4000 then
 			ReplicatedStorage.Remotes.CommF_:InvokeServer("requestEntrance", Vector3.new(5657.8, 1013.0, -335.4))
 			task.wait(0.5)
-		elseif targetPos.X < -11000 and targetPos.Z < -6000 then -- Mansion
+		elseif targetPos.X < -11000 and targetPos.Z < -6000 then
 			ReplicatedStorage.Remotes.CommF_:InvokeServer("requestEntrance", Vector3.new(-12471.1, 374.9, -7551.6))
 			task.wait(0.5)
 		end
@@ -204,7 +203,7 @@ local function topos(targetCFrame)
 	end)
 end
 
--- Collision Control & Noclip
+-- Collision & Noclip Control
 RunService.Stepped:Connect(function()
 	if isTweening or _G.AutoFarm or _G.AutoFarmLevelNew or _G.AutoBoss or _G.AutoFarmMaterial or _G.SafeMode then
 		if LocalPlayer.Character then
@@ -218,7 +217,7 @@ RunService.Stepped:Connect(function()
 end)
 
 -- ========================================================
--- COMBAT & MOB MANAGEMENT HELPERS (PATCHED)
+-- COMBAT & MOB HELPERS
 -- ========================================================
 local function AutoHaki()
 	local char = LocalPlayer.Character
@@ -275,7 +274,7 @@ local function BringMob(mobName, centerCFrame)
 end
 
 -- ========================================================
--- FULL QUEST PROGRESSION DATABASE (LV 1 - 2575+)
+-- QUEST PROGRESSION DATABASE (LV 1 - 2575+)
 -- ========================================================
 local Quests_W1 = {
 	{1, 9, "Bandit", 1, "BanditQuest1", CFrame.new(1059.37, 15.45, 1550.42), CFrame.new(1045.96, 27.00, 1560.82)},
@@ -442,7 +441,6 @@ end
 -- ========================================================
 -- BACKGROUND AUTO FARM WORKERS
 -- ========================================================
--- Standard Auto Farm Level Worker
 task.spawn(function()
 	while task.wait(0.15) do
 		if _G.AutoFarm then
@@ -498,7 +496,6 @@ task.spawn(function()
 	end
 end)
 
--- Submerged Farm Level New Worker
 task.spawn(function()
 	while task.wait(0.15) do
 		if _G.AutoFarmLevelNew then
@@ -554,7 +551,6 @@ task.spawn(function()
 	end
 end)
 
--- Mob Aura Worker
 task.spawn(function()
 	while task.wait(0.2) do
 		if _G.AutoNear then
@@ -589,7 +585,6 @@ task.spawn(function()
 	end
 end)
 
--- Safe Mode Sentinel Worker
 task.spawn(function()
 	while task.wait(0.2) do
 		if _G.SafeMode then
@@ -617,7 +612,7 @@ task.spawn(function()
 end)
 
 -- ========================================================
--- TAB: FARMING (LUNA INTERFACE)
+-- TAB 1: FARMING
 -- ========================================================
 local TabFarming = Window:CreateTab({
 	Name        = "Farming",
@@ -693,55 +688,11 @@ TabFarming:CreateToggle({
 }, "SafeModeToggle")
 
 -- ========================================================
--- ARCHITECTURE BRIDGE: EXPOSE CORE TO SUBSEQUENT PARTS
--- ========================================================
-getgenv().LouisHub = getgenv().LouisHub or {}
-local Louis = getgenv().LouisHub
-
-Louis.Window        = Window
-Louis.Notify        = Notify
-Louis.topos         = topos
-Louis.StopTween     = StopTween
-Louis.WaitHRP       = WaitHRP
-Louis.CheckEntrance = CheckEntrance
-Louis.EquipWeapon   = EquipWeapon
-Louis.AutoHaki      = AutoHaki
-Louis.BringMob      = BringMob
-Louis.World1        = World1
-Louis.World2        = World2
-Louis.World3        = World3
-
-Notify("Louis Hub", "Blox Fruits Part 1 (Core & Farm) Patched!", "check_circle")
-
--- ========================================================
---  LOUIS HUB - BLOX FRUITS (PRO MASTER SUITE)
---  Part 2: Bosses, Materials, Sea Events & Special Islands
--- ========================================================
-
-local Louis         = getgenv().LouisHub or {}
-local Window        = Louis.Window
-local Notify        = Louis.Notify or function(...) end
-local topos         = Louis.topos
-local StopTween     = Louis.StopTween
-local WaitHRP       = Louis.WaitHRP
-local EquipWeapon   = Louis.EquipWeapon
-local AutoHaki      = Louis.AutoHaki
-local BringMob      = Louis.BringMob
-local World1        = Louis.World1
-local World2        = Louis.World2
-local World3        = Louis.World3
-
-if not Window then
-	warn("[Louis Hub] Error: Window dari Part 1 tidak ditemukan! Pastikan Part 1 sudah terpasang di atas.")
-	return
-end
-
--- ========================================================
--- TAB: BOSS & MATERIALS
+-- TAB 2: BOSS & MATERIAL
 -- ========================================================
 local TabBoss = Window:CreateTab({
 	Name        = "Boss & Material",
-	Icon        = "swords",
+	Icon        = "gavel",
 	ImageSource = "Material",
 	ShowTitle   = true
 })
@@ -825,13 +776,14 @@ local BossList = World1 and {
 	"Beautiful Pirate", "rip_indra True Form", "Longma", "Soul Reaper", "Cake Queen", "Tyrant of the Skies"
 } or {}))
 
+if #BossList == 0 then table.insert(BossList, "The Gorilla King") end
 local selectedBoss = BossList[1] or ""
 
 TabBoss:CreateDropdown({
 	Name          = "Select Boss",
 	Description   = "Target boss instance to hunt",
 	Options       = BossList,
-	CurrentOption = {BossList[1] or "None"},
+	CurrentOption = {BossList[1]},
 	MultipleOptions = false,
 	Callback      = function(OptionTable)
 		selectedBoss = typeof(OptionTable) == "table" and OptionTable[1] or OptionTable
@@ -978,7 +930,7 @@ task.spawn(function()
 end)
 
 -- ========================================================
--- TAB: SEA EVENTS (NAVAL OPERATIONS)
+-- TAB 3: SEA EVENTS
 -- ========================================================
 local TabSea = Window:CreateTab({
 	Name        = "Sea Events",
@@ -1062,7 +1014,7 @@ task.spawn(function()
 
 					local elevation = 60
 					if workspace._WorldOrigin:FindFirstChild("Typhoon Splash") then
-						elevation = 280 -- Menghindar ke atas dari skill Typhoon
+						elevation = 280
 					end
 
 					topos(ts.HumanoidRootPart.CFrame * CFrame.new(0, elevation, 0))
@@ -1170,7 +1122,7 @@ task.spawn(function()
 end)
 
 -- ========================================================
--- TAB: SPECIAL ISLANDS (KITSUNE, MIRAGE, VOLCANO)
+-- TAB 4: SPECIAL ISLANDS
 -- ========================================================
 local TabSpecial = Window:CreateTab({
 	Name        = "Special Islands",
@@ -1476,38 +1428,8 @@ task.spawn(function()
 	end
 end)
 
--- Bridge extension
-Louis.TabBoss    = TabBoss
-Louis.TabSea     = TabSea
-Louis.TabSpecial = TabSpecial
-
-Notify("Louis Hub", "Blox Fruits Part 2 (Boss, Sea & Islands) Loaded!", "check_circle")
-
 -- ========================================================
---  LOUIS HUB - BLOX FRUITS (PRO MASTER SUITE)
---  Part 3: Race V4, Raids/Dungeons, Quest Puzzles & Fishing
--- ========================================================
-
-local Louis         = getgenv().LouisHub or {}
-local Window        = Louis.Window
-local Notify        = Louis.Notify or function(...) end
-local topos         = Louis.topos
-local StopTween     = Louis.StopTween
-local WaitHRP       = Louis.WaitHRP
-local EquipWeapon   = Louis.EquipWeapon
-local AutoHaki      = Louis.AutoHaki
-local BringMob      = Louis.BringMob
-local World1        = Louis.World1
-local World2        = Louis.World2
-local World3        = Louis.World3
-
-if not Window then
-	warn("[Louis Hub] Error: Window dari Part 1 tidak ditemukan! Pastikan Part 1 dan Part 2 sudah terpasang di atas.")
-	return
-end
-
--- ========================================================
--- TAB: RACE V4 & TEMPLE OF TIME
+-- TAB 5: RACE V4 & TEMPLE OF TIME
 -- ========================================================
 local TabRaceV4 = Window:CreateTab({
 	Name        = "Race V4",
@@ -1689,11 +1611,11 @@ task.spawn(function()
 end)
 
 -- ========================================================
--- TAB: RAIDS & DUNGEONS
+-- TAB 6: RAIDS & DUNGEONS
 -- ========================================================
 local TabRaid = Window:CreateTab({
 	Name        = "Raids",
-	Icon        = "military_tech",
+	Icon        = "shield",
 	ImageSource = "Material",
 	ShowTitle   = true
 })
@@ -1906,7 +1828,7 @@ task.spawn(function()
 end)
 
 -- ========================================================
--- TAB: QUEST ITEMS & PUZZLES
+-- TAB 7: QUEST & ITEMS
 -- ========================================================
 local TabQuest = Window:CreateTab({
 	Name        = "Quest & Items",
@@ -1934,7 +1856,6 @@ task.spawn(function()
 				local comm = ReplicatedStorage.Remotes.CommF_
 				local junglePlate = workspace.Map.Jungle.QuestPlates.Door
 
-				-- Step 1: Injak 5 Plat Jungle
 				if junglePlate.Transparency == 0 then
 					local plates = workspace.Map.Jungle.QuestPlates
 					for i = 1, 5 do
@@ -1947,7 +1868,6 @@ task.spawn(function()
 					return
 				end
 
-				-- Step 2: Ambil Obor & Bakar Pintu Desert
 				local desertDoor = workspace.Map.Desert.Burn.Part
 				if desertDoor.Transparency == 0 then
 					local bp = LocalPlayer.Backpack
@@ -1962,7 +1882,6 @@ task.spawn(function()
 					return
 				end
 
-				-- Step 3: Isi Air Cup di Snow Cave & Kasih ke Sick Man
 				local sickStatus = comm:InvokeServer("ProQuestProgress", "SickMan")
 				if sickStatus == 0 then
 					comm:InvokeServer("ProQuestProgress", "GetCup")
@@ -1978,7 +1897,6 @@ task.spawn(function()
 					return
 				end
 
-				-- Step 4: Bunuh Mob Leader & Ambil Relic
 				local richStatus = comm:InvokeServer("ProQuestProgress", "RichSon")
 				if richStatus == 0 then
 					local mobLeader = workspace.Enemies:FindFirstChild("Mob Leader")
@@ -2002,7 +1920,6 @@ task.spawn(function()
 					return
 				end
 
-				-- Step 5: Bunuh Saber Expert
 				local saber = workspace.Enemies:FindFirstChild("Saber Expert")
 				if saber and saber:FindFirstChild("Humanoid") and saber.Humanoid.Health > 0 then
 					AutoHaki()
@@ -2040,7 +1957,6 @@ task.spawn(function()
 				local progress = comm:InvokeServer("BartiloQuestProgress", "Bartilo")
 
 				if progress == 0 then
-					-- Kills 50 Swan Pirates
 					local qGui = LocalPlayer.PlayerGui.Main.Quest
 					if not qGui.Visible then
 						topos(CFrame.new(-456.28, 73.02, 299.89))
@@ -2061,7 +1977,6 @@ task.spawn(function()
 						end
 					end
 				elseif progress == 1 then
-					-- Kills Jeremy
 					local jeremy = workspace.Enemies:FindFirstChild("Jeremy")
 					if jeremy and jeremy:FindFirstChild("Humanoid") and jeremy.Humanoid.Health > 0 then
 						AutoHaki()
@@ -2075,7 +1990,6 @@ task.spawn(function()
 						topos(CFrame.new(2099.88, 448.93, 648.99))
 					end
 				elseif progress == 2 then
-					-- Kode Meja Colosseum
 					local codes = {
 						CFrame.new(-1850.49, 13.17, 1750.89), CFrame.new(-1858.87, 19.37, 1712.01),
 						CFrame.new(-1803.94, 16.57, 1750.89), CFrame.new(-1858.55, 16.86, 1724.79),
@@ -2220,7 +2134,7 @@ task.spawn(function()
 end)
 
 -- ========================================================
--- TAB: AUTO FISHING
+-- TAB 8: AUTO FISHING
 -- ========================================================
 local TabFishing = Window:CreateTab({
 	Name        = "Fishing",
@@ -2311,43 +2225,12 @@ task.spawn(function()
 	end
 end)
 
--- Bridge extension
-Louis.TabRaceV4  = TabRaceV4
-Louis.TabRaid    = TabRaid
-Louis.TabQuest   = TabQuest
-Louis.TabFishing = TabFishing
-
-Notify("Louis Hub", "Blox Fruits Part 3 (Race V4, Raids, Quests & Fishing) Loaded!", "check_circle")
-
 -- ========================================================
---  LOUIS HUB - BLOX FRUITS (PRO MASTER SUITE)
---  Part 4: Fruits, Teleport, ESP, Shop, Utility & Codes [PATCHED]
--- ========================================================
-
-local Louis         = getgenv().LouisHub or {}
-local Window        = Louis.Window
-local Notify        = Louis.Notify or function(...) end
-local topos         = Louis.topos
-local StopTween     = Louis.StopTween
-local WaitHRP       = Louis.WaitHRP
-local EquipWeapon   = Louis.EquipWeapon
-local AutoHaki      = Louis.AutoHaki
-local BringMob      = Louis.BringMob
-local World1        = Louis.World1
-local World2        = Louis.World2
-local World3        = Louis.World3
-
-if not Window then
-	warn("[Louis Hub] Error: Window dari Part 1 tidak ditemukan! Pastikan Part 1, 2, dan 3 sudah terpasang di atas.")
-	return
-end
-
--- ========================================================
--- TAB: FRUITS & STOCK
+-- TAB 9: FRUIT & STOCK
 -- ========================================================
 local TabFruit = Window:CreateTab({
 	Name        = "Fruit & Stock",
-	Icon        = "apple",
+	Icon        = "eco",
 	ImageSource = "Material",
 	ShowTitle   = true
 })
@@ -2473,9 +2356,9 @@ local function GetStockText()
 				found = true
 			end
 		end
-		if not found then text = text .. "- Stock Kosong.\n" end
+		if not found then text = text .. "- No Stock Available.\n" end
 	else
-		text = text .. "- Gagal mengambil data.\n"
+		text = text .. "- Failed to retrieve stock data.\n"
 	end
 
 	text = text .. "\nNormal Fruit Stock:\n"
@@ -2488,15 +2371,15 @@ local function GetStockText()
 				found = true
 			end
 		end
-		if not found then text = text .. "- Stock Kosong.\n" end
+		if not found then text = text .. "- No Stock Available.\n" end
 	else
-		text = text .. "- Gagal mengambil data.\n"
+		text = text .. "- Failed to retrieve stock data.\n"
 	end
 	return text
 end
 
 local stockLabel = TabFruit:CreateLabel({
-	Text  = "Memuat data stock...",
+	Text  = "Loading stock data...",
 	Style = 2
 })
 
@@ -2511,7 +2394,7 @@ TabFruit:CreateButton({
 pcall(function() stockLabel:Set(GetStockText()) end)
 
 -- ========================================================
--- TAB: NAVIGATION & TELEPORT
+-- TAB 10: NAVIGATION & TELEPORT
 -- ========================================================
 local TabTeleport = Window:CreateTab({
 	Name        = "Navigation",
@@ -2570,13 +2453,14 @@ local Islands_W3 = {
 local currentIslandTable = World1 and Islands_W1 or (World2 and Islands_W2 or (World3 and Islands_W3 or {}))
 local islandKeys = {}
 for name, _ in pairs(currentIslandTable) do table.insert(islandKeys, name) end
-local selectedTargetIsland = islandKeys[1] or ""
+if #islandKeys == 0 then table.insert(islandKeys, "WindMill") end
+local selectedTargetIsland = islandKeys[1]
 
 TabTeleport:CreateDropdown({
 	Name          = "Select Island",
 	Description   = "Destinations available in your current Sea",
-	Options       = #islandKeys > 0 and islandKeys or {"No Island Found"},
-	CurrentOption = {#islandKeys > 0 and islandKeys[1] or "No Island Found"},
+	Options       = islandKeys,
+	CurrentOption = {islandKeys[1]},
 	MultipleOptions = false,
 	Callback      = function(OptionTable)
 		selectedTargetIsland = typeof(OptionTable) == "table" and OptionTable[1] or OptionTable
@@ -2621,7 +2505,7 @@ TabTeleport:CreateButton({
 })
 
 -- ========================================================
--- TAB: VISUALS & ESP
+-- TAB 11: VISUALS & ESP
 -- ========================================================
 local TabESP = Window:CreateTab({
 	Name        = "Visuals",
@@ -2866,7 +2750,7 @@ task.spawn(function()
 end)
 
 -- ========================================================
--- TAB: SHOP & CRAFTING (PATCHED: NO ADDBUTTON CRASH)
+-- TAB 12: SHOP & CRAFTING
 -- ========================================================
 local TabShop = Window:CreateTab({
 	Name        = "Shop",
@@ -2953,11 +2837,11 @@ TabShop:CreateButton({Name = "Reroll Race (3k Frags)", Callback = function()
 end})
 
 -- ========================================================
--- TAB: UTILITY, SERVER & CODES (PATCHED)
+-- TAB 13: UTILITY & CODES
 -- ========================================================
 local TabUtils = Window:CreateTab({
 	Name        = "Utility",
-	Icon        = "settings",
+	Icon        = "tune",
 	ImageSource = "Material",
 	ShowTitle   = true
 })
@@ -3112,7 +2996,7 @@ TabUtils:CreateButton({
 })
 
 -- ========================================================
--- LUNA NATIVE CONFIGURATION & THEME
+-- TAB 14 & 15: THEME & PROFILES (LUNA NATIVE)
 -- ========================================================
 local ThemeTab = Window:CreateTab({
 	Name        = "Theme",
@@ -3130,4 +3014,4 @@ local ConfigTab = Window:CreateTab({
 })
 ConfigTab:BuildConfigSection()
 
-Notify("Louis Hub", "Blox Fruits Pro Master Suite Fully Initialized! (All Parts Complete)", "verified")
+Notify("Louis Hub", "Blox Fruits Pro Master Suite Initialized Successfully!", "verified")
