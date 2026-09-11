@@ -1,7 +1,7 @@
 -- ========================================================
 --  LOUIS HUB - BLOX FRUITS (PRO MASTER SUITE)
 --  Engine: Luna Interface Suite | 100% Full English
---  Complete Edition: All Tabs, Farming, Sea Events, Raids, ESP & Shop
+--  Complete & Intact Edition | All Features & Fixed Profiles
 -- ========================================================
 
 -- ========================================================
@@ -477,6 +477,9 @@ task.spawn(function()
 
 						BringMob(Mon, mobHrp.CFrame)
 
+						local tool = char:FindFirstChildOfClass("Tool")
+						if tool then tool:Activate() end
+
 						VirtualUser:CaptureController()
 						VirtualUser:Button1Down(Vector2.new(640, 360))
 						task.wait(0.05)
@@ -532,6 +535,9 @@ task.spawn(function()
 
 						BringMob(MonNew, mobHrp.CFrame)
 
+						local tool = char:FindFirstChildOfClass("Tool")
+						if tool then tool:Activate() end
+
 						VirtualUser:CaptureController()
 						VirtualUser:Button1Down(Vector2.new(640, 360))
 						task.wait(0.05)
@@ -572,6 +578,9 @@ task.spawn(function()
 							mobHrp.CanCollide = false
 							mobHrp.Size = Vector3.new(50, 50, 50)
 							mob.Humanoid.WalkSpeed = 0
+
+							local tool = char:FindFirstChildOfClass("Tool")
+							if tool then tool:Activate() end
 
 							VirtualUser:CaptureController()
 							VirtualUser:Button1Down(Vector2.new(640, 360))
@@ -702,10 +711,10 @@ TabBoss:CreateSection("Material Gathering")
 local Materials = {
 	["Radioactive"]   = {mob = "Factory Staff", pos = CFrame.new(-507.78, 73, -126.45)},
 	["Mystic Droplet"]= {mob = "Water Fighter", pos = CFrame.new(-3352.9, 285.01, -10534.84)},
-	["Magma Ore"]     = {mob = World1 and "Military Spy" or "Lava Pirate", pos = World1 and CFrame.new(-5850.28, 77.28, 8848.67) or CFrame.new(-5234.6, 51.95, -4732.27)},
+	["Magma Ore"]     = {mob = "Military Spy", pos = CFrame.new(-5850.28, 77.28, 8848.67)},
 	["Angel Wings"]   = {mob = "Royal Soldier", pos = CFrame.new(-7827.15, 5606.91, -1705.58)},
-	["Leather"]       = {mob = World1 and "Pirate" or (World2 and "Marine Captain" or "Jungle Pirate"), pos = World1 and CFrame.new(-1211.87, 4.78, 3916.83) or (World2 and CFrame.new(-2010.5, 73, -3326.62) or CFrame.new(-11975.78, 331.77, -10620.03))},
-	["Scrap Metal"]   = {mob = World1 and "Brute" or (World2 and "Mercenary" or "Pirate Millionaire"), pos = World1 and CFrame.new(-1132.42, 14.84, 4293.3) or (World2 and CFrame.new(-972.3, 73.04, 1419.29) or CFrame.new(-289.63, 43.82, 5583.66))},
+	["Leather"]       = {mob = "Pirate", pos = CFrame.new(-1211.87, 4.78, 3916.83)},
+	["Scrap Metal"]   = {mob = "Brute", pos = CFrame.new(-1132.42, 14.84, 4293.3)},
 	["Conjured Cocoa"]= {mob = "Chocolate Bar Battler", pos = CFrame.new(744.79, 24.76, -12637.72)},
 	["Dragon Scale"]  = {mob = "Dragon Crew Warrior", pos = CFrame.new(5824.06, 51.38, -1106.69)},
 	["Gunpowder"]     = {mob = "Pistol Billionaire", pos = CFrame.new(-379.61, 73.84, 5928.52)},
@@ -751,6 +760,8 @@ task.spawn(function()
 					topos(mob.HumanoidRootPart.CFrame * CFrame.new(0, 25, 0))
 					mob.HumanoidRootPart.CanCollide = false
 					mob.HumanoidRootPart.Size = Vector3.new(50, 50, 50)
+					local tool = LocalPlayer.Character:FindFirstChildOfClass("Tool")
+					if tool then tool:Activate() end
 					VirtualUser:CaptureController()
 					VirtualUser:Button1Down(Vector2.new(640, 360))
 					task.wait(0.05)
@@ -765,19 +776,16 @@ end)
 
 TabBoss:CreateSection("World Boss Combat")
 
-local BossList = World1 and {
+local BossList = {
 	"The Gorilla King", "Bobby", "Yeti", "Mob Leader", "Vice Admiral", "Warden",
-	"Chief Warden", "Swan", "Magma Admiral", "Fishman Lord", "Wysper", "Thunder God", "Cyborg", "Saber Expert"
-} or (World2 and {
+	"Chief Warden", "Swan", "Magma Admiral", "Fishman Lord", "Wysper", "Thunder God", "Cyborg", "Saber Expert",
 	"Diamond", "Jeremy", "Fajita", "Don Swan", "Smoke Admiral", "Cursed Captain",
-	"Darkbeard", "Order", "Awakened Ice Admiral", "Tide Keeper"
-} or (World3 and {
+	"Darkbeard", "Order", "Awakened Ice Admiral", "Tide Keeper",
 	"Stone", "Island Empress", "Hydra Leader", "Kilo Admiral", "Captain Elephant",
 	"Beautiful Pirate", "rip_indra True Form", "Longma", "Soul Reaper", "Cake Queen", "Tyrant of the Skies"
-} or {}))
+}
 
-if #BossList == 0 then table.insert(BossList, "The Gorilla King") end
-local selectedBoss = BossList[1] or ""
+local selectedBoss = BossList[1]
 
 TabBoss:CreateDropdown({
 	Name          = "Select Boss",
@@ -827,6 +835,8 @@ task.spawn(function()
 					topos(boss.HumanoidRootPart.CFrame * CFrame.new(0, 30, 0))
 					boss.HumanoidRootPart.CanCollide = false
 					boss.HumanoidRootPart.Size = Vector3.new(60, 60, 60)
+					local tool = LocalPlayer.Character:FindFirstChildOfClass("Tool")
+					if tool then tool:Activate() end
 					VirtualUser:CaptureController()
 					VirtualUser:Button1Down(Vector2.new(640, 360))
 					task.wait(0.05)
@@ -861,6 +871,8 @@ task.spawn(function()
 					AutoHaki()
 					EquipWeapon(_G.SelectWeapon or "Melee")
 					topos(db.HumanoidRootPart.CFrame * CFrame.new(0, 30, 0))
+					local tool = LocalPlayer.Character:FindFirstChildOfClass("Tool")
+					if tool then tool:Activate() end
 					VirtualUser:CaptureController()
 					VirtualUser:Button1Down(Vector2.new(640, 360))
 					task.wait(0.05)
@@ -890,6 +902,8 @@ task.spawn(function()
 					AutoHaki()
 					EquipWeapon(_G.SelectWeapon or "Melee")
 					topos(cc.HumanoidRootPart.CFrame * CFrame.new(0, 30, 0))
+					local tool = LocalPlayer.Character:FindFirstChildOfClass("Tool")
+					if tool then tool:Activate() end
 					VirtualUser:CaptureController()
 					VirtualUser:Button1Down(Vector2.new(640, 360))
 					task.wait(0.05)
@@ -919,6 +933,8 @@ task.spawn(function()
 					AutoHaki()
 					EquipWeapon(_G.SelectWeapon or "Melee")
 					topos(indra.HumanoidRootPart.CFrame * CFrame.new(0, -35, 0))
+					local tool = LocalPlayer.Character:FindFirstChildOfClass("Tool")
+					if tool then tool:Activate() end
 					VirtualUser:CaptureController()
 					VirtualUser:Button1Down(Vector2.new(640, 360))
 					task.wait(0.05)
@@ -953,7 +969,7 @@ TabSea:CreateToggle({
 
 task.spawn(function()
 	while task.wait(1) do
-		if _G.SailBoat and World3 then
+		if _G.SailBoat then
 			pcall(function()
 				local enemies = workspace.Enemies
 				local hasSeaMobs = enemies:FindFirstChild("Terrorshark") or enemies:FindFirstChild("Shark") or enemies:FindFirstChild("Piranha") or enemies:FindFirstChild("Fish Crew Member")
@@ -1002,7 +1018,7 @@ TabSea:CreateToggle({
 
 task.spawn(function()
 	while task.wait(0.15) do
-		if _G.Autoterrorshark and World3 then
+		if _G.Autoterrorshark then
 			pcall(function()
 				local ts = workspace.Enemies:FindFirstChild("Terrorshark")
 				if ts and ts:FindFirstChild("Humanoid") and ts.Humanoid.Health > 0 and ts:FindFirstChild("HumanoidRootPart") then
@@ -1020,6 +1036,9 @@ task.spawn(function()
 					topos(ts.HumanoidRootPart.CFrame * CFrame.new(0, elevation, 0))
 					ts.HumanoidRootPart.CanCollide = false
 					ts.Humanoid.WalkSpeed = 0
+
+					local tool = LocalPlayer.Character:FindFirstChildOfClass("Tool")
+					if tool then tool:Activate() end
 
 					VirtualUser:CaptureController()
 					VirtualUser:Button1Down(Vector2.new(640, 360))
@@ -1043,7 +1062,7 @@ TabSea:CreateToggle({
 
 task.spawn(function()
 	while task.wait(0.15) do
-		if _G.KillShark and World3 then
+		if _G.KillShark then
 			pcall(function()
 				local shark = workspace.Enemies:FindFirstChild("Shark")
 				if shark and shark:FindFirstChild("Humanoid") and shark.Humanoid.Health > 0 and shark:FindFirstChild("HumanoidRootPart") then
@@ -1051,6 +1070,8 @@ task.spawn(function()
 					EquipWeapon(_G.SelectWeapon or "Melee")
 					topos(shark.HumanoidRootPart.CFrame * CFrame.new(0, 35, 0))
 					shark.HumanoidRootPart.CanCollide = false
+					local tool = LocalPlayer.Character:FindFirstChildOfClass("Tool")
+					if tool then tool:Activate() end
 					VirtualUser:CaptureController()
 					VirtualUser:Button1Down(Vector2.new(640, 360))
 					task.wait(0.05)
@@ -1073,7 +1094,7 @@ TabSea:CreateToggle({
 
 task.spawn(function()
 	while task.wait(0.15) do
-		if _G.KillPiranha and World3 then
+		if _G.KillPiranha then
 			pcall(function()
 				local piranha = workspace.Enemies:FindFirstChild("Piranha")
 				if piranha and piranha:FindFirstChild("Humanoid") and piranha.Humanoid.Health > 0 and piranha:FindFirstChild("HumanoidRootPart") then
@@ -1081,6 +1102,8 @@ task.spawn(function()
 					EquipWeapon(_G.SelectWeapon or "Melee")
 					topos(piranha.HumanoidRootPart.CFrame * CFrame.new(0, 30, 0))
 					piranha.HumanoidRootPart.CanCollide = false
+					local tool = LocalPlayer.Character:FindFirstChildOfClass("Tool")
+					if tool then tool:Activate() end
 					VirtualUser:CaptureController()
 					VirtualUser:Button1Down(Vector2.new(640, 360))
 					task.wait(0.05)
@@ -1103,7 +1126,7 @@ TabSea:CreateToggle({
 
 task.spawn(function()
 	while task.wait(0.15) do
-		if _G.KillFishCrew and World3 then
+		if _G.KillFishCrew then
 			pcall(function()
 				local crew = workspace.Enemies:FindFirstChild("Fish Crew Member")
 				if crew and crew:FindFirstChild("Humanoid") and crew.Humanoid.Health > 0 and crew:FindFirstChild("HumanoidRootPart") then
@@ -1111,6 +1134,8 @@ task.spawn(function()
 					EquipWeapon(_G.SelectWeapon or "Melee")
 					topos(crew.HumanoidRootPart.CFrame * CFrame.new(0, 30, 0))
 					crew.HumanoidRootPart.CanCollide = false
+					local tool = LocalPlayer.Character:FindFirstChildOfClass("Tool")
+					if tool then tool:Activate() end
 					VirtualUser:CaptureController()
 					VirtualUser:Button1Down(Vector2.new(640, 360))
 					task.wait(0.05)
@@ -1340,6 +1365,8 @@ task.spawn(function()
 									topos(rock.CFrame)
 									AutoHaki()
 									EquipWeapon(_G.SelectWeapon or "Melee")
+									local tool = LocalPlayer.Character:FindFirstChildOfClass("Tool")
+									if tool then tool:Activate() end
 									VirtualUser:CaptureController()
 									VirtualUser:Button1Down(Vector2.new(640, 360))
 									task.wait(0.05)
@@ -1375,6 +1402,8 @@ task.spawn(function()
 					EquipWeapon(_G.SelectWeapon or "Melee")
 					topos(golem.HumanoidRootPart.CFrame * CFrame.new(0, 30, 0))
 					golem.HumanoidRootPart.CanCollide = false
+					local tool = LocalPlayer.Character:FindFirstChildOfClass("Tool")
+					if tool then tool:Activate() end
 					VirtualUser:CaptureController()
 					VirtualUser:Button1Down(Vector2.new(640, 360))
 					task.wait(0.05)
@@ -1522,7 +1551,7 @@ TabRaceV4:CreateToggle({
 
 task.spawn(function()
 	while task.wait(0.2) do
-		if _G.AutoQuestRace and World3 then
+		if _G.AutoQuestRace then
 			pcall(function()
 				local race = LocalPlayer.Data.Race.Value
 
@@ -1532,6 +1561,8 @@ task.spawn(function()
 						AutoHaki()
 						EquipWeapon(_G.SelectWeapon or "Melee")
 						topos(sb.HumanoidRootPart.CFrame * CFrame.new(0, 30, 0))
+						local tool = LocalPlayer.Character:FindFirstChildOfClass("Tool")
+						if tool then tool:Activate() end
 						VirtualUser:CaptureController()
 						VirtualUser:Button1Down(Vector2.new(640, 360))
 						task.wait(0.05)
@@ -1552,6 +1583,8 @@ task.spawn(function()
 							EquipWeapon(_G.SelectWeapon or "Melee")
 							topos(enemy.HumanoidRootPart.CFrame * CFrame.new(0, 25, 0))
 							enemy.HumanoidRootPart.CanCollide = false
+							local tool = LocalPlayer.Character:FindFirstChildOfClass("Tool")
+							if tool then tool:Activate() end
 							VirtualUser:CaptureController()
 							VirtualUser:Button1Down(Vector2.new(640, 360))
 							task.wait(0.05)
@@ -1597,6 +1630,8 @@ task.spawn(function()
 							topos(char.HumanoidRootPart.CFrame * CFrame.new(0, 5, 2))
 							char.HumanoidRootPart.CanCollide = false
 							char.HumanoidRootPart.Size = Vector3.new(50, 50, 50)
+							local tool = LocalPlayer.Character:FindFirstChildOfClass("Tool")
+							if tool then tool:Activate() end
 							VirtualUser:CaptureController()
 							VirtualUser:Button1Down(Vector2.new(640, 360))
 							task.wait(0.05)
@@ -1738,6 +1773,8 @@ task.spawn(function()
 					EquipWeapon(_G.SelectWeapon or "Melee")
 					topos(targetMob.HumanoidRootPart.CFrame * CFrame.new(0, 25, 0))
 					targetMob.HumanoidRootPart.CanCollide = false
+					local tool = LocalPlayer.Character:FindFirstChildOfClass("Tool")
+					if tool then tool:Activate() end
 					VirtualUser:CaptureController()
 					VirtualUser:Button1Down(Vector2.new(640, 360))
 					task.wait(0.05)
@@ -1817,6 +1854,8 @@ task.spawn(function()
 					EquipWeapon(_G.SelectWeapon or "Melee")
 					topos(order.HumanoidRootPart.CFrame * CFrame.new(0, 30, 0))
 					order.HumanoidRootPart.CanCollide = false
+					local tool = LocalPlayer.Character:FindFirstChildOfClass("Tool")
+					if tool then tool:Activate() end
 					VirtualUser:CaptureController()
 					VirtualUser:Button1Down(Vector2.new(640, 360))
 					task.wait(0.05)
@@ -1904,6 +1943,8 @@ task.spawn(function()
 						AutoHaki()
 						EquipWeapon(_G.SelectWeapon or "Melee")
 						topos(mobLeader.HumanoidRootPart.CFrame * CFrame.new(0, 25, 0))
+						local tool = LocalPlayer.Character:FindFirstChildOfClass("Tool")
+						if tool then tool:Activate() end
 						VirtualUser:CaptureController()
 						VirtualUser:Button1Down(Vector2.new(640, 360))
 						task.wait(0.05)
@@ -1925,6 +1966,8 @@ task.spawn(function()
 					AutoHaki()
 					EquipWeapon(_G.SelectWeapon or "Melee")
 					topos(saber.HumanoidRootPart.CFrame * CFrame.new(0, 25, 0))
+					local tool = LocalPlayer.Character:FindFirstChildOfClass("Tool")
+					if tool then tool:Activate() end
 					VirtualUser:CaptureController()
 					VirtualUser:Button1Down(Vector2.new(640, 360))
 					task.wait(0.05)
@@ -1968,6 +2011,8 @@ task.spawn(function()
 							AutoHaki()
 							EquipWeapon(_G.SelectWeapon or "Melee")
 							topos(mob.HumanoidRootPart.CFrame * CFrame.new(0, 25, 0))
+							local tool = LocalPlayer.Character:FindFirstChildOfClass("Tool")
+							if tool then tool:Activate() end
 							VirtualUser:CaptureController()
 							VirtualUser:Button1Down(Vector2.new(640, 360))
 							task.wait(0.05)
@@ -1982,6 +2027,8 @@ task.spawn(function()
 						AutoHaki()
 						EquipWeapon(_G.SelectWeapon or "Melee")
 						topos(jeremy.HumanoidRootPart.CFrame * CFrame.new(0, 30, 0))
+						local tool = LocalPlayer.Character:FindFirstChildOfClass("Tool")
+						if tool then tool:Activate() end
 						VirtualUser:CaptureController()
 						VirtualUser:Button1Down(Vector2.new(640, 360))
 						task.wait(0.05)
@@ -2029,6 +2076,8 @@ task.spawn(function()
 					AutoHaki()
 					EquipWeapon(_G.SelectWeapon or "Melee")
 					topos(indra.HumanoidRootPart.CFrame * CFrame.new(0, 30, 0))
+					local tool = LocalPlayer.Character:FindFirstChildOfClass("Tool")
+					if tool then tool:Activate() end
 					VirtualUser:CaptureController()
 					VirtualUser:Button1Down(Vector2.new(640, 360))
 					task.wait(0.05)
@@ -2121,6 +2170,8 @@ task.spawn(function()
 					AutoHaki()
 					EquipWeapon(_G.SelectWeapon or "Melee")
 					topos(longma.HumanoidRootPart.CFrame * CFrame.new(0, 30, 0))
+					local tool = LocalPlayer.Character:FindFirstChildOfClass("Tool")
+					if tool then tool:Activate() end
 					VirtualUser:CaptureController()
 					VirtualUser:Button1Down(Vector2.new(640, 360))
 					task.wait(0.05)
@@ -2403,62 +2454,54 @@ local TabTeleport = Window:CreateTab({
 	ShowTitle   = true
 })
 
-TabTeleport:CreateSection("Island Destinations (Auto-Filtered)")
+TabTeleport:CreateSection("Island Destinations")
 
-local Islands_W1 = {
-	["WindMill"]       = CFrame.new(979.79, 16.51, 1429.04),
-	["Marine"]         = CFrame.new(-2566.43, 6.85, 2045.25),
-	["Middle Town"]    = CFrame.new(-690.33, 15.09, 1582.23),
-	["Jungle"]         = CFrame.new(-1612.79, 36.85, 149.12),
-	["Pirate Village"] = CFrame.new(-1181.30, 4.75, 3803.54),
-	["Desert"]         = CFrame.new(944.15, 20.92, 4373.30),
-	["Snow Island"]    = CFrame.new(1347.80, 104.66, -1319.73),
-	["MarineFord"]     = CFrame.new(-4914.82, 50.96, 4281.02),
-	["Colosseum"]      = CFrame.new(-1427.62, 7.28, -2792.77),
-	["Sky Island 1"]   = CFrame.new(-4869.10, 733.46, -2667.01),
-	["Prison"]         = CFrame.new(4875.33, 5.65, 734.85),
-	["Magma Village"]  = CFrame.new(-5247.71, 12.88, 8504.96),
-	["Fountain City"]  = CFrame.new(5127.12, 59.50, 4105.44)
+local AllIslands = {
+	["WindMill (Sea 1)"]          = CFrame.new(979.79, 16.51, 1429.04),
+	["Marine (Sea 1)"]            = CFrame.new(-2566.43, 6.85, 2045.25),
+	["Middle Town (Sea 1)"]       = CFrame.new(-690.33, 15.09, 1582.23),
+	["Jungle (Sea 1)"]            = CFrame.new(-1612.79, 36.85, 149.12),
+	["Pirate Village (Sea 1)"]    = CFrame.new(-1181.30, 4.75, 3803.54),
+	["Desert (Sea 1)"]            = CFrame.new(944.15, 20.92, 4373.30),
+	["Snow Island (Sea 1)"]       = CFrame.new(1347.80, 104.66, -1319.73),
+	["MarineFord (Sea 1)"]        = CFrame.new(-4914.82, 50.96, 4281.02),
+	["Colosseum (Sea 1)"]         = CFrame.new(-1427.62, 7.28, -2792.77),
+	["Sky Island 1 (Sea 1)"]      = CFrame.new(-4869.10, 733.46, -2667.01),
+	["Prison (Sea 1)"]            = CFrame.new(4875.33, 5.65, 734.85),
+	["Magma Village (Sea 1)"]     = CFrame.new(-5247.71, 12.88, 8504.96),
+	["Fountain City (Sea 1)"]     = CFrame.new(5127.12, 59.50, 4105.44),
+	["The Cafe (Sea 2)"]          = CFrame.new(-380.47, 77.22, 255.82),
+	["Flamingo Mansion (Sea 2)"]  = CFrame.new(-483.73, 332.03, 595.32),
+	["Green Zone (Sea 2)"]        = CFrame.new(-2448.53, 73.01, -3210.63),
+	["Zombie Island (Sea 2)"]     = CFrame.new(-5622.03, 492.19, -781.78),
+	["Two Snow Mountain (Sea 2)"] = CFrame.new(753.14, 408.23, -5274.61),
+	["Punk Hazard (Sea 2)"]       = CFrame.new(-6127.65, 15.95, -5040.28),
+	["Cursed Ship (Sea 2)"]       = CFrame.new(923.40, 125.05, 32885.87),
+	["Ice Castle (Sea 2)"]        = CFrame.new(6148.41, 294.38, -6741.11),
+	["Forgotten Island (Sea 2)"]  = CFrame.new(-3032.76, 317.89, -10075.37),
+	["Mansion (Sea 3)"]           = CFrame.new(-12471.17, 374.94, -7551.67),
+	["Port Town (Sea 3)"]         = CFrame.new(-226.75, 20.60, 5538.34),
+	["Great Tree (Sea 3)"]        = CFrame.new(2681.27, 1682.80, -7190.98),
+	["Castle On The Sea (Sea 3)"] = CFrame.new(-5083.26, 314.60, -3175.67),
+	["Hydra Island (Sea 3)"]      = CFrame.new(5291.24, 1005.44, 393.76),
+	["Floating Turtle (Sea 3)"]   = CFrame.new(-13274.52, 531.82, -7579.22),
+	["Haunted Castle (Sea 3)"]    = CFrame.new(-9515.37, 164.00, 5786.06),
+	["Ice Cream Island (Sea 3)"]  = CFrame.new(-902.56, 79.93, -10988.84),
+	["Peanut Island (Sea 3)"]     = CFrame.new(-2062.74, 50.47, -10232.56),
+	["Cake Island (Sea 3)"]       = CFrame.new(-1884.77, 19.32, -11666.89),
+	["Cocoa Island (Sea 3)"]      = CFrame.new(87.94, 73.55, -12319.46),
+	["Candy Island (Sea 3)"]      = CFrame.new(-1014.42, 149.11, -14555.96),
+	["Tiki Outpost (Sea 3)"]      = CFrame.new(-16218.68, 9.08, 445.61),
+	["Dragon Dojo (Sea 3)"]       = CFrame.new(5743.31, 1206.91, 936.01)
 }
 
-local Islands_W2 = {
-	["The Cafe"]          = CFrame.new(-380.47, 77.22, 255.82),
-	["Flamingo Mansion"]  = CFrame.new(-483.73, 332.03, 595.32),
-	["Green Zone"]        = CFrame.new(-2448.53, 73.01, -3210.63),
-	["Zombie Island"]     = CFrame.new(-5622.03, 492.19, -781.78),
-	["Two Snow Mountain"] = CFrame.new(753.14, 408.23, -5274.61),
-	["Punk Hazard"]       = CFrame.new(-6127.65, 15.95, -5040.28),
-	["Cursed Ship"]       = CFrame.new(923.40, 125.05, 32885.87),
-	["Ice Castle"]        = CFrame.new(6148.41, 294.38, -6741.11),
-	["Forgotten Island"]  = CFrame.new(-3032.76, 317.89, -10075.37)
-}
-
-local Islands_W3 = {
-	["Mansion"]           = CFrame.new(-12471.17, 374.94, -7551.67),
-	["Port Town"]         = CFrame.new(-226.75, 20.60, 5538.34),
-	["Great Tree"]        = CFrame.new(2681.27, 1682.80, -7190.98),
-	["Castle On The Sea"] = CFrame.new(-5083.26, 314.60, -3175.67),
-	["Hydra Island"]      = CFrame.new(5291.24, 1005.44, 393.76),
-	["Floating Turtle"]   = CFrame.new(-13274.52, 531.82, -7579.22),
-	["Haunted Castle"]    = CFrame.new(-9515.37, 164.00, 5786.06),
-	["Ice Cream Island"]  = CFrame.new(-902.56, 79.93, -10988.84),
-	["Peanut Island"]     = CFrame.new(-2062.74, 50.47, -10232.56),
-	["Cake Island"]       = CFrame.new(-1884.77, 19.32, -11666.89),
-	["Cocoa Island"]      = CFrame.new(87.94, 73.55, -12319.46),
-	["Candy Island"]      = CFrame.new(-1014.42, 149.11, -14555.96),
-	["Tiki Outpost"]      = CFrame.new(-16218.68, 9.08, 445.61),
-	["Dragon Dojo"]       = CFrame.new(5743.31, 1206.91, 936.01)
-}
-
-local currentIslandTable = World1 and Islands_W1 or (World2 and Islands_W2 or (World3 and Islands_W3 or {}))
 local islandKeys = {}
-for name, _ in pairs(currentIslandTable) do table.insert(islandKeys, name) end
-if #islandKeys == 0 then table.insert(islandKeys, "WindMill") end
+for name, _ in pairs(AllIslands) do table.insert(islandKeys, name) end
 local selectedTargetIsland = islandKeys[1]
 
 TabTeleport:CreateDropdown({
 	Name          = "Select Island",
-	Description   = "Destinations available in your current Sea",
+	Description   = "All world destinations across Sea 1, 2, and 3",
 	Options       = islandKeys,
 	CurrentOption = {islandKeys[1]},
 	MultipleOptions = false,
@@ -2471,8 +2514,8 @@ TabTeleport:CreateButton({
 	Name        = "Teleport to Selected Island",
 	Description = "Executes smooth transit to chosen island",
 	Callback    = function()
-		if currentIslandTable[selectedTargetIsland] then
-			topos(currentIslandTable[selectedTargetIsland])
+		if AllIslands[selectedTargetIsland] then
+			topos(AllIslands[selectedTargetIsland])
 			Notify("Louis Hub", "Navigating to " .. selectedTargetIsland, "place")
 		end
 	end
@@ -2996,7 +3039,7 @@ TabUtils:CreateButton({
 })
 
 -- ========================================================
--- TAB 14 & 15: THEME & PROFILES (LUNA NATIVE)
+-- TAB 14 & 15: THEME & PROFILES (FIXED & FULLY POPULATED)
 -- ========================================================
 local ThemeTab = Window:CreateTab({
 	Name        = "Theme",
@@ -3012,6 +3055,105 @@ local ConfigTab = Window:CreateTab({
 	ImageSource = "Material",
 	ShowTitle   = true
 })
-ConfigTab:BuildConfigSection()
+
+ConfigTab:CreateSection("Profile Configuration")
+
+local configName = "Default"
+ConfigTab:CreateInput({
+	Name            = "Profile Name",
+	Description     = "Enter configuration save file name",
+	PlaceholderText = "Default",
+	CurrentValue    = "Default",
+	Callback        = function(text)
+		configName = (text and text ~= "") and text or "Default"
+	end
+}, "ConfigNameInput")
+
+ConfigTab:CreateButton({
+	Name        = "Save Current Profile",
+	Description = "Saves active weapon, boss, and safeguard settings to file",
+	Callback    = function()
+		local success, err = pcall(function()
+			if writefile then
+				local settingsData = {
+					SelectWeapon = _G.SelectWeapon,
+					SelectedBoss = selectedBoss,
+					SelectedMaterial = selectedMaterial,
+					AutoHaki = _G.AutoHaki,
+					SafeMode = _G.SafeMode
+				}
+				writefile("LouisHub_" .. configName .. ".json", HttpService:JSONEncode(settingsData))
+				Notify("Louis Hub", "Profile '" .. configName .. "' saved successfully!", "check_circle")
+			else
+				Notify("Louis Hub", "Executor does not support writefile.", "error")
+			end
+		end)
+		if not success then Notify("Louis Hub", "Failed to save: " .. tostring(err), "error") end
+	end
+})
+
+ConfigTab:CreateButton({
+	Name        = "Load Saved Profile",
+	Description = "Restores settings from chosen profile name",
+	Callback    = function()
+		local success, err = pcall(function()
+			local fileName = "LouisHub_" .. configName .. ".json"
+			if isfile and isfile(fileName) then
+				local data = HttpService:JSONDecode(readfile(fileName))
+				if data.SelectWeapon then _G.SelectWeapon = data.SelectWeapon end
+				if data.SelectedBoss then selectedBoss = data.SelectedBoss end
+				if data.SelectedMaterial then selectedMaterial = data.SelectedMaterial end
+				if data.AutoHaki ~= nil then _G.AutoHaki = data.AutoHaki end
+				if data.SafeMode ~= nil then _G.SafeMode = data.SafeMode end
+				Notify("Louis Hub", "Profile '" .. configName .. "' loaded successfully!", "check_circle")
+			else
+				Notify("Louis Hub", "Profile file not found: " .. fileName, "error")
+			end
+		end)
+		if not success then Notify("Louis Hub", "Failed to load: " .. tostring(err), "error") end
+	end
+})
+
+ConfigTab:CreateButton({
+	Name        = "Reset Settings to Default",
+	Description = "Turns off all automated features and clears tweening",
+	Callback    = function()
+		_G.AutoFarm = false
+		_G.AutoFarmLevelNew = false
+		_G.AutoBoss = false
+		_G.AutoFarmMaterial = false
+		_G.AutoNear = false
+		_G.SailBoat = false
+		_G.Autoterrorshark = false
+		_G.KillShark = false
+		_G.KillPiranha = false
+		_G.KillFishCrew = false
+		_G.AutoQuestRace = false
+		_G.AutoKillV4 = false
+		_G.AutoBuyChip = false
+		_G.StartRaid = false
+		_G.Dungeon = false
+		_G.AutoLawRaid = false
+		_G.AutoSaber = false
+		_G.AutoBartilo = false
+		_G.ThirdSea = false
+		_G.AutoYama = false
+		_G.AutoHolyTorch = false
+		_G.AutoGetTushita = false
+		_G.AutoFishing = false
+		_G.AutoStoreFruit = false
+		_G.ESPPlayer = false
+		_G.ChestESP = false
+		_G.FruitESP = false
+		_G.FlowerESP = false
+		_G.BerryESP = false
+		StopTween()
+		Notify("Louis Hub", "All toggles reset to default.", "refresh")
+	end
+})
+
+pcall(function()
+	ConfigTab:BuildConfigSection()
+end)
 
 Notify("Louis Hub", "Blox Fruits Pro Master Suite Initialized Successfully!", "verified")
