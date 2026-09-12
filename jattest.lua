@@ -1,7 +1,7 @@
 -- ========================================================
 --  LOUIS HUB - BLOX FRUITS (PRO MASTER SUITE)
 --  Engine: Luna Interface Suite | 100% Full English
---  Complete & Intact Edition | All Features & Fixed Profiles
+--  Complete Edition | All 15 Tabs Functional & Intact
 -- ========================================================
 
 -- ========================================================
@@ -697,7 +697,7 @@ TabFarming:CreateToggle({
 }, "SafeModeToggle")
 
 -- ========================================================
--- TAB 2: BOSS & MATERIAL
+-- TAB 2: BOSS & MATERIAL (ALL 34 BOSSES INCLUDED)
 -- ========================================================
 local TabBoss = Window:CreateTab({
 	Name        = "Boss & Material",
@@ -774,7 +774,7 @@ task.spawn(function()
 	end
 end)
 
-TabBoss:CreateSection("World Boss Combat")
+TabBoss:CreateSection("World Boss Combat (Sea 1, 2, 3)")
 
 local BossList = {
 	"The Gorilla King", "Bobby", "Yeti", "Mob Leader", "Vice Admiral", "Warden",
@@ -950,7 +950,7 @@ end)
 -- ========================================================
 local TabSea = Window:CreateTab({
 	Name        = "Sea Events",
-	Icon        = "waves",
+	Icon        = "sports_kabaddi",
 	ImageSource = "Material",
 	ShowTitle   = true
 })
@@ -1151,7 +1151,7 @@ end)
 -- ========================================================
 local TabSpecial = Window:CreateTab({
 	Name        = "Special Islands",
-	Icon        = "explore",
+	Icon        = "place",
 	ImageSource = "Material",
 	ShowTitle   = true
 })
@@ -1462,7 +1462,7 @@ end)
 -- ========================================================
 local TabRaceV4 = Window:CreateTab({
 	Name        = "Race V4",
-	Icon        = "military_tech",
+	Icon        = "leaderboard",
 	ImageSource = "Material",
 	ShowTitle   = true
 })
@@ -1650,7 +1650,7 @@ end)
 -- ========================================================
 local TabRaid = Window:CreateTab({
 	Name        = "Raids",
-	Icon        = "shield",
+	Icon        = "lock_open",
 	ImageSource = "Material",
 	ShowTitle   = true
 })
@@ -2185,11 +2185,11 @@ task.spawn(function()
 end)
 
 -- ========================================================
--- TAB 8: AUTO FISHING
+-- TAB 8: AUTO FISHING (FIXED MATERIAL ICON)
 -- ========================================================
 local TabFishing = Window:CreateTab({
 	Name        = "Fishing",
-	Icon        = "phishing",
+	Icon        = "pets",
 	ImageSource = "Material",
 	ShowTitle   = true
 })
@@ -2281,7 +2281,7 @@ end)
 -- ========================================================
 local TabFruit = Window:CreateTab({
 	Name        = "Fruit & Stock",
-	Icon        = "eco",
+	Icon        = "monetization_on",
 	ImageSource = "Material",
 	ShowTitle   = true
 })
@@ -3039,7 +3039,7 @@ TabUtils:CreateButton({
 })
 
 -- ========================================================
--- TAB 14 & 15: THEME & PROFILES (FIXED & FULLY POPULATED)
+-- TAB 14 & 15: THEME & PROFILES (FIXED & FULLY INTERACTIVE)
 -- ========================================================
 local ThemeTab = Window:CreateTab({
 	Name        = "Theme",
@@ -3061,7 +3061,7 @@ ConfigTab:CreateSection("Profile Configuration")
 local configName = "Default"
 ConfigTab:CreateInput({
 	Name            = "Profile Name",
-	Description     = "Enter configuration save file name",
+	Description     = "Enter configuration file name",
 	PlaceholderText = "Default",
 	CurrentValue    = "Default",
 	Callback        = function(text)
@@ -3076,11 +3076,11 @@ ConfigTab:CreateButton({
 		local success, err = pcall(function()
 			if writefile then
 				local settingsData = {
-					SelectWeapon = _G.SelectWeapon,
-					SelectedBoss = selectedBoss,
+					SelectWeapon     = _G.SelectWeapon,
+					SelectedBoss     = selectedBoss,
 					SelectedMaterial = selectedMaterial,
-					AutoHaki = _G.AutoHaki,
-					SafeMode = _G.SafeMode
+					AutoHaki         = _G.AutoHaki,
+					SafeMode         = _G.SafeMode
 				}
 				writefile("LouisHub_" .. configName .. ".json", HttpService:JSONEncode(settingsData))
 				Notify("Louis Hub", "Profile '" .. configName .. "' saved successfully!", "check_circle")
