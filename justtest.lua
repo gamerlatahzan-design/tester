@@ -26,13 +26,19 @@ end
 local playerGui = LocalPlayer:WaitForChild("PlayerGui", 15) or LocalPlayer:FindFirstChildOfClass("PlayerGui")
 
 -- ========================================================
--- OBSIDIAN UI LIBRARY LOADER
+-- OBSIDIAN UI LIBRARY LOADER (AUTO-FALLBACK)
 -- ========================================================
 local repo = "https://raw.githubusercontent.com/deividcomsono/Obsidian/main/"
 local Library = nil
 local okLib, resLib = pcall(function()
 	return loadstring(game:HttpGet(repo .. "Library.lua", true))()
 end)
+
+if not okLib or not resLib then
+	okLib, resLib = pcall(function()
+		return loadstring(game:HttpGet("https://raw.githubusercontent.com/AquaHubs/ObsidianUi-/refs/heads/main/EXAMPLE", true))()
+	end)
+end
 
 if okLib and resLib then
 	Library = resLib
@@ -749,21 +755,6 @@ task.spawn(function()
 			end
 		end
 
-		if show2DBossBar then
-			local pGui = LocalPlayer:FindFirstChild("PlayerGui")
-			local bGui = pGui and pGui:FindFirstChild("BossScreenGui")
-			local bBar = bGui and bGui:FindFirstChild("BossHealthBar")
-			if bBar and not bBar.Visible and isAlive then bBar.Visible = true end
-		end
-
-		if muteBossMedia then
-			local pGui = LocalPlayer:FindFirstChild("PlayerGui")
-			if pGui then
-				local notice = pGui:FindFirstChild("bossSpawnNotificationRuntime")
-				if notice then notice:Destroy() end
-			end
-		end
-
 		task.wait(1)
 	end
 end)
@@ -1110,14 +1101,17 @@ local function autoClaimBossChest()
 end
 
 -- ========================================================
--- OBSIDIAN WINDOW CREATION
+-- OBSIDIAN WINDOW CREATION (AUTOSHOW & LOGO PATCHED)
 -- ========================================================
 local Window = Library:CreateWindow({
 	Title = "Louis Hub",
 	Footer = "Muscle Legends (Obsidian Master Suite)",
-	Icon = 82795327169782,
+	Icon = 82795327169782, -- Luna Logo ID as requested
 	NotifySide = "Right",
-	ShowCustomCursor = false
+	ShowCustomCursor = false,
+	AutoShow = true,
+	Center = true,
+	MobileButtonsSide = "Right"
 })
 
 local Tabs = {
@@ -2019,10 +2013,7 @@ task.spawn(function()
 				if myHrp then
 					preTagWorkoutCFrame = myHrp.CFrame
 					local arenaPos = getArenaLocation()
-					if arenaPos then
-						myHrp.CFrame = arenaPos
-						task.wait(0.3)
-					end
+					if arenaPos then myHrp.CFrame = arenaPos task.wait(0.3) end
 					local bossModel, hitbox = findPhysicalBossModel()
 					if hitbox and bossModel then
 						Notify("Louis Hub", "Tagging boss for loot eligibility...")
@@ -2707,10 +2698,7 @@ UtilPassBox:AddButton({
 	Func = function()
 		local codeRemote = ReplicatedStorage:FindFirstChild("rEvents") and ReplicatedStorage.rEvents:FindFirstChild("codeRemote")
 		if codeRemote then
-			for _, code in ipairs(activeCodes) do
-				pcall(function() codeRemote:InvokeServer(code) end)
-				task.wait(0.08)
-			end
+			for _, code in ipairs(activeCodes) do pcall(function() codeRemote:InvokeServer(code) end); task.wait(0.08) end
 			Notify("Louis Hub", "Promo codes submitted.")
 		end
 	end
@@ -2954,11 +2942,13 @@ NavBrawlBox:AddDropdown('SelectBrawlDropdown', {
 })
 
 -- ========================================================
--- TAB 11: UI SETTINGS & OBSIDIAN MANAGERS
+-- TAB 11: UI SETTINGS & MANAGERS
 -- ========================================================
 local SettingsBox = Tabs['UI Settings']:AddLeftGroupbox('Menu Keybind')
 SettingsBox:AddLabel('Menu Keybind'):AddKeyPicker('MenuKeybind', { Default = 'RightControl', NoUI = true, Text = 'Menu keybind' })
-Library.ToggleKeybind = Options.MenuKeybind
+if Options and Options.MenuKeybind then
+	Library.ToggleKeybind = Options.MenuKeybind
+end
 
 local ThemeManager = nil
 local SaveManager = nil
